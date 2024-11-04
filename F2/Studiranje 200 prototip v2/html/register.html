@@ -1,0 +1,67 @@
+<!-- Autori: Vladimir Bogojevic 0382/21, Mihajlo Antonijevic 0382/21  -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registracija</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/register.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="register-container">
+    <h1>Registracija</h1>
+    <div class="form-container">
+      <form class="register-form">
+        <label for="username" class="form-label">Korisničko ime</label>
+        <input type="text" placeholder="Korisničko ime" id="username" required>
+
+        <label for="email" class="form-label">E-mail</label>
+        <input type="text" placeholder="E-mail" id="email" required>
+
+        <label for="password" class="form-label">Šifra</label>
+        <input type="password" placeholder="Šifra" id="password" required>
+
+        <label for="nameSurname" class="form-label">Ime i prezime</label>
+        <input type="text" placeholder="Ime i prezime" id="nameSurname" required>
+
+        <label for="date" class="form-label">Datum rodjenja</label>
+        <div class="date-div">
+          <input type="date" placeholder="Datum rodjenja" id="date" required>
+        </div>
+
+        <label for="place" class="form-label">Mesto</label>
+        <input type="text" placeholder="Mesto" id="place" required>
+
+        <label for="faculty" class="form-label">Fakultet</label>
+        <select size="1">
+          <option witdh="100%">ETF</option>
+          <option>FON</option>
+          <option>MATF</option>
+          <option>MATF</option>
+        </select>
+
+        <label for="pol" class="form-label">Pol</label>
+        <div class="radio-container">
+          <label for="m">M</label>
+          <input type="radio" id="m" name="pol" value="M" checked>
+          <label for="z">Ž</label>
+          <input type="radio" id="z" name="pol" value="Ž">
+        </div>
+
+        <label for="avatar" class="form-label">Profilna slika (opciono)</label>
+        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" />
+
+        <button type="submit">Registruj se</button>
+        <a href="login.html" class="login-link">Imaš nalog? Prijavi se!</a>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!-- Autori: Vladimir Bogojevic 0382/21, Mihajlo Antonijevic 0382/21  -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organization Page</title>
+  <!-- Bootstrap CSS -->
+  <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="../css/event.css" rel="stylesheet">
+  <link href="../css/common.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="navbar-logo">
+      <a href="homepage.html"><img src="../imgs/logo.png" alt="logo"></a>
+    </div>
+    <div class="navbar-menu">
+      <a href="homepage.html">POČETNA</a>
+      <a href="events.html">DOGAĐAJI</a>
+      <a href="organizations.html">ORGANIZACIJE</a>
+      <a href="locations.html">LOKACIJE</a>
+    </div>
+    <div class="navbar-signin">
+      <a href="login.html">
+        <button class="signin-button">Prijavi se</button>
+      </a>
+    </div>
+  </div>
+
+  <div class="container my-5 bg-tamno p-3 rounded">
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Image Placeholder -->
+        <img src="../imgs/elektron.png" alt="Org Image" class="img-fluid">
+      </div>
+      <div class="col-md-6 d-flex flex-column justify-content-center">
+        <h2>ORG IME</h2>
+        <p class="text-muted">OCENA: 4.5</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+        <button class="button mt-auto">UČLANI SE U ORGANIZACIJU</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container my-5">
+    <div class="event-comments">
+      <h3>Komentari</h3>
+      <form id="commentForm">
+        <div class="mb-3">
+          <textarea class="form-control" id="commentText" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="button">POŠALJI</button>
+      </form>
+      <div class="comments-list mt-4">
+        <!-- Comments will be inserted here -->
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

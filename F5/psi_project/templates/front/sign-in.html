@@ -1,0 +1,61 @@
+<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base_no_header.html' %}
+<!-- **************** MAIN CONTENT START **************** -->
+{% block main %}
+<main>
+  
+  <!-- Container START -->
+  <div class="container">
+    <div class="row justify-content-center align-items-center vh-100 py-5">
+      <!-- Main content START -->
+      <div class="col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">
+        <!-- Sign in START -->
+        <div class="card card-body text-center p-4 p-sm-5">
+          <!-- Title -->
+          <h1 class="mb-2">Prijava</h1>
+          <p class="mb-0">Nemaš nalog?<a href="{% url 'register' %}"> Registruj se! </a></p>
+          <!-- Form START -->
+          <form class="mt-sm-4" action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <!-- Email -->
+            <div class="mb-3 input-group-lg">
+              <input name="username" type="text" class="form-control" placeholder="Korisnicko ime">
+            </div>
+            <!-- New password -->
+            <div class="mb-3 position-relative">
+              <!-- Password -->
+              <div class="input-group input-group-lg">
+                <input name="password" class="form-control fakepassword" type="password" id="psw-input" placeholder="Lozinka">
+                <span class="input-group-text p-0">
+                  <i class="fakepasswordicon fa-solid fa-eye-slash cursor-pointer p-2 w-40px"></i>
+                </span>
+              </div>
+            </div>
+            <!-- Remember me -->
+            <div class="mb-3 d-sm-flex justify-content-between">
+              <div>
+              </div>
+              <!--<a href="{% url 'forgot-password' %}">Zaboravio si lozinku?</a>-->
+            </div>
+            <!-- Button -->
+            <div class="d-grid"><button type="submit" class="btn btn-lg btn-primary">Prijavi se</button></div>
+          </form>
+          <!-- Form END -->
+        </div>
+        <!-- Sign in START -->
+      </div>
+    </div> <!-- Row END -->
+  </div>
+  <!-- Container END -->
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+ {% endblock %}
+ 

@@ -1,0 +1,27 @@
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+/* Custom styles for the button to match the image */
+button {
+  background-color: #000;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  display: inline-block;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+/* If the image needs specific styling */
+img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #000; /* If there's a border */
+}

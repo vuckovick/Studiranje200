@@ -1,0 +1,383 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+{% load static %}
+{% load l10n %}
+{% load filters %}
+<!-- **************** MAIN CONTENT START **************** -->
+{% block title %}
+    Organizacija
+{% endblock %}
+{% block main %}
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+  
+  <!-- Container START -->
+  <div class="container">
+    <div class="row g-4">
+      <!-- Main content START -->
+      <div class="col-md-8 col-lg-9 vstack gap-4">
+        <!-- Card START -->
+        <div class="card">
+          <!-- Card body START -->
+          <div class="card-body">
+            <div class="d-md-flex flex-wrap align-items-start text-center text-md-start">
+              <div class="mb-2">
+                <!-- Avatar -->
+                <div class="avatar avatar-xl">
+                  <img class="avatar-img border-0" src="{{ org.picture.url }}" alt="">
+                </div>
+              </div>
+              <div class="ms-md-4 mt-3">
+                <!-- Info -->
+                <h1 class="h5 mb-1">{{ org.name }}  <i class="bi bi-patch-check-fill text-success small"></i></h1>
+                <ul class="nav nav-divider justify-content-center justify-content-md-start">
+                  <!-- <li class="nav-item"> Private group </li> -->
+                  <li class="nav-item">Broj članova: {{ members.count }}</li>
+                </ul>
+              </div>
+              <!-- Button -->
+              <div class="d-flex justify-content-center justify-content-md-start align-items-center mt-3 ms-lg-auto">
+                {% if user.is_authenticated%}
+                {% if user in org.members.all and org|role_in_org:user == 'member' and user.role == 'regular' %}
+                  <button class="btn btn-sm btn-primary me-2 leave" type="button" name="leave" id="leave_{{org.org_id}}">
+                  <i class="bi bi-person-dash-fill pe-1"></i> Izađi</button>
+                {% else %}
+                    {% if  user.role == 'regular' and can_join %}
+                        {% if user|sent_request:org %}
+                            <button class="btn btn-sm btn-primary-soft me-2 join" type="button" name="join" id="join_{{org.org_id}}">
+                            <i class="fa fa-thumbs-up pe-1"></i> Poništi zahtev
+                        {% else %}
+                            <button class="btn btn-sm btn-primary-soft me-2 join" type="button" name="join" id="join_{{org.org_id}}">
+                            <i class="bi bi-person-check-fill pe-1"></i> Učlani se</button>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if user not in org.members.all or org|role_in_org:user == 'follower' %}
+                    {% if is_following == True %}
+                      <button class="btn btn-sm btn-success me-2 follow" type="button" id="{{org.org_id}}">
+                      <i class="fa-solid fa-thumbs-up me-1"></i> Otprati
+                    {%else%}
+                      <button class="btn btn-sm btn-outline-success me-2 follow" type="button" id="{{org.org_id}}">
+                      <i class="fa-solid fa-plus pe-1"></i> Zaprati
+                    {%endif%}
+                  </button>
+                {% endif%}
+                {%endif%}
+              </div>
+            </div>
+            <!-- Join group START -->
+            <ul class="avatar-group list-unstyled justify-content-center justify-content-md-start align-items-center mb-0 mt-3 flex-wrap">
+              {% for member in members|slice:":4" %}
+                <li class="avatar avatar-xs">
+                  <img class="avatar-img rounded-circle" src="{{ member.user.profile_picture.url }}" alt="{{ member.name }}">
+                </li>
+              {% endfor %}
+              {% if members|length > 4 %}
+              <li class="avatar avatar-xs me-2">
+                <div class="avatar-img rounded-circle bg-primary">
+                  <span class="smaller text-white position-absolute top-50 start-50 translate-middle">+{{ members|length|add:"-4" }}</span>
+                </div>
+              </li>
+              {% else %}
+                <li class="avatar avatar-xs me-2">
+                <span class="smaller text-white position-absolute top-50 start-20 translate-middle"></span>
+                </li>
+              {% endif %}
+              <li class="small text-center">
+                {% for member in members|slice:":3" %}
+                  {{ member.user.full_name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                    {% if members|length > 2 %}
+                    i {{ members|length|add:"-2" }} su članovi organizacije.
+                    {% else %}
+                    su članovi organizacije.
+                    {% endif %}
+              </li>
+            </ul>
+            <!-- Join group END -->
+          </div>
+        </div>
+        <!-- Card END -->
+
+        <div class="tab-content pt-0 pb-0 mb-0">
+
+          <!-- Gruop Feed tab START -->
+          <div class="tab-pane show active fade" id="group-tab-1">
+            <div class="row g-4">
+
+            <div class="col-lg-4">
+                <!-- About START -->
+                <div class="card  mb-4">
+                  <!-- Title -->
+                  <div class="card-header border-0 pb-0">
+                    <h5 class="card-title">Info</h5>
+                  </div>
+                  <!-- Card body START -->
+                  <div class="card-body position-relative pt-0">
+                    <p>{{ org.description }}</p>
+                    <!-- info -->
+                    <ul class="list-unstyled mt-3 mb-0">
+                      <li class="mb-2"> <i class="bi bi-book fa-fw pe-1"></i> Fakultet: <strong> {{ org.studentorg.faculty.tag }} </strong> </li>
+                      <li class="mb-2"> <i class="bi bi-star fa-fw pe-1"></i> {{ org|rating_org }} </li>
+                      {% comment %} <li class="mb-2"> <i class="bi bi-globe2 fa-fw pe-1"></i> <strong> Sajt ? </strong> </li> {% endcomment %}
+                    </ul>
+                  </div>
+                  <!-- Card body END -->
+                </div>
+                <!-- About END -->
+                  <!-- Card follow START -->
+                <div class="card">
+                  <!-- Card header START -->
+                  <div class="card-header pb-0 border-0">
+                    <h5 class="card-title mb-0">Članovi</h5>
+                  </div>
+                  <div class="card-body">
+                    <div id="connection-list">
+                        {% for member in members|slice:"5" %}
+                            <div class="hstack gap-2 mb-3">
+                                <div class="avatar">
+                                    <a href="{% url 'profile_view' username=member.user.username %}"><img class="avatar-img rounded-circle" src="{{ member.user.profile_picture.url }}" alt=""></a>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <a class="h6 mb-0" href="{% url 'profile_view' username=member.user.username %}">{{ member.user.full_name }}</a>
+                                    <p class="mb-0 small text-truncate">{{ org|role_in_org:member.user }}</p>
+                                </div>
+                                {% if member.is_current_user != True and user.is_authenticated%}
+                                  {% if member.conn_status == ''%}
+                                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto connect" id="{{member.user.id}}"><i class="fa-solid fa-plus"></i></a>
+                                  {% elif member.conn_status == 'pending'%}
+                                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto connect" id="{{member.user.id}}"><i class="fa-solid fa-clock"></i></a>
+                                  {%else%}
+                                    <a class="btn btn-primary-soft rounded-circle icon-md ms-auto"><i class="fa-solid fa-check"></i></a>
+                                  {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Connection items END -->
+
+                    <!-- View more button -->
+                    <div id="view-more-button text-center" class="d-grid mt-3">
+                        <a class="btn btn-sm btn-primary-soft text-center" id="view-more" style="text-align: center;">Pogledaj sve</a>
+                    </div>
+                    <!-- View less button -->
+                    <div id="view-less-button text-center" class="d-grid mt-3">
+                        <a class="btn btn-sm btn-primary-soft text-center" id="view-less" style="display: none; text-align: center;" >Vrati</a>
+                    </div>
+                  </div>
+                  <!-- Card body END -->
+                </div>
+              </div>
+
+              <div class="col-lg-8 vstack gap-4">
+
+                <div class="card card-body">
+                  <div class="text-center">
+                        {% if org.events.count == 0 %}
+                        <i class="display-1 text-body-secondary bi bi-emoji-frown"></i>
+                        <h4 class="mt-2 mb-3 text-body">Jos uvek nema organizovanih dogadjaja !</h4>
+                        {% else %}
+                        <div class="row g-4">
+                            {% for event in org.events.all %}
+                            <div class="col-sm-6 col-xl-4" style="margin-bottom: 10px;">
+                                <!-- Event item START -->
+                                <div class="card h-100 d-flex flex-column" style="display: flex; flex-direction: column; height: 100%;">
+                                    <a href="{% url 'event_details' event.event_id %}"><img class="card-img-top" src="/media/{{ event.picture }}" alt="{{ event.name }}" style="height: 150px; width: 100%; object-fit: cover;"></a>
+                                    <div class="card-body d-flex flex-column" style="display: flex; flex-direction: column; flex-grow: 1;">
+                                        <a href="{% url 'event_details' event.event_id %}"><h5 class="card-title">{{ event.name }}</h5></a>
+                                        <p class="card-text mt-auto"><small class="text-muted">{{ event.date }} u {{ event.time }}</small></p>
+                                        <div>
+                                            <a href="{% url 'event_details' event.event_id %}" class="btn btn-primary">Detalji</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Event item END -->
+                            </div>
+
+
+                            {% endfor %}
+                        </div>
+
+                      {% endif %}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+          <!-- Gruop Feed tab END -->
+        </div>
+
+      </div>
+    </div> <!-- Row END -->
+  </div>
+  <!-- Container END -->
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initially hide all connection items beyond the first 5
+    document.querySelectorAll('#connection-list .hstack').forEach(function (item, index) {
+        if (index >= 5) {
+            item.style.display = 'none';
+        }
+    });
+
+    // Add event listener to the "View more" button
+    document.getElementById('view-more').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.querySelectorAll('#connection-list .hstack').forEach(function (item) {
+            item.style.display = 'flex';
+        });
+        document.getElementById('view-more').style.display = 'none';
+        document.getElementById('view-less').style.display = 'block';
+    });
+
+    document.getElementById('view-less').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.querySelectorAll('#connection-list .hstack').forEach(function (item, index) {
+            if (index >= 5) {
+            item.style.display = 'none';
+        }
+        });
+        document.getElementById('view-less').style.display = 'none'
+        document.getElementById('view-more').style.display = 'block';
+    });
+
+    // following organization
+    var followButtons = document.querySelectorAll('.follow');
+    followButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const eventId = this.id;
+
+            fetch("{% url 'follow_organization' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'org_id': eventId })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                  // Optionally, change the button state
+                  this.classList.remove('btn-outline-success');
+                  this.classList.add('btn-success');
+                  this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Otprati';
+                  window.location.reload()
+              } else if (data.status === 'already_interested') {
+                  alert('You are already marked as interested in this event.');
+              }else if (data.status === 'canceled') {
+                  // Reset the button to its initial state if the status is 'canceled'
+                  this.classList.add('btn-outline-success');
+                  this.classList.remove('btn-success');
+                  this.innerHTML = '<i class="fa-solid fa-plus pe-1"></i> Zaprati';
+                  window.location.reload()
+              }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+    });
+
+    // Joining organization
+    var joinButtons = document.querySelectorAll('.join');
+    joinButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const orgID = this.id.split('_')[1];
+
+            fetch("{% url 'join_organization' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'org_id': orgID })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                  // Optionally, change the button state
+                  this.classList.remove('btn-primary');
+                  this.classList.add('btn-primary-soft');
+                  this.innerHTML = '<i class="fa fa-thumbs-up pe-1"></i> Poništi zahtev';
+                  window.location.reload()
+              }else if (data.status === 'canceled') {
+                  // Reset the button to its initial state if the status is 'canceled'
+                  this.classList.remove('btn-primary-soft');
+                  this.classList.add('btn-primary');
+                  this.innerHTML = '<i class="fa-solid fa-plus pe-1"></i> Učlani se';
+                  window.location.reload()
+              }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+    });
+
+    var followButtons = document.querySelectorAll('.connect');
+        followButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const followeeId = this.id;
+
+            fetch("{% url 'send_connection_request' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'followeeId': followeeId })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                  this.innerHTML = '<i class="fa-solid fa-clock"></i>';
+              }else if (data.status === 'canceled') {
+                  this.innerHTML = '<i class="fa-solid fa-plus"></i>';
+              }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+    });
+
+    // Joining organization
+    var leaveButtons = document.querySelectorAll('.leave');
+    leaveButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const orgID = this.id.split('_')[1];
+
+            fetch("{% url 'leave_organization' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'org_id': orgID })
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.reload()}
+            )
+          .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+</script>
+<!-- Modal create events END -->
+{% endblock %}

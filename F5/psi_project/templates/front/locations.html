@@ -1,0 +1,177 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}  
+{% load static %}
+
+{% block title %}
+    Lokacije
+{% endblock %}
+
+{% block main %}
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main class="pt-0">
+
+  <!-- Hero event START --> 
+  <section class="pt-5 pb-0 position-relative" style="background-image: url({% static 'images/bg/07.jpg' %}); background-repeat: no-repeat; background-size: cover; background-position: top center;">
+    <div class="bg-overlay bg-dark opacity-8"></div>
+    <!-- Container START -->
+    <div class="container">
+      <div class="py-5">
+        <div class="row position-relative">
+          <div class="col-lg-9 mx-auto">
+            <div class="text-center">
+              <!-- Title -->
+              <h1 class="text-white">Istraži lokacije</h1>
+              <p class="text-white">Otkrijte najbolje lokacije za savršenu žurku u Vašoj blizini!</p>
+            </div>
+            <div class="mx-auto bg-mode shadow rounded p-4 mt-5">
+              <!-- Form START -->
+              <form class="row align-items-end g-4"  action="{% url 'locations' %}" method="POST">
+                {% csrf_token %}
+                <!-- Search -->
+                <div class="col-sm-12 col-lg-3">
+                  <div class="d-flex flex-column align-items-start">
+                      <label class="form-label">Pretraga</label>
+                      <div class="position-relative w-100">
+                          <input class="form-control ps-5 bg-light" type="search" name="name" placeholder="Pretraga..." {% if name != "Pretraga..."%}value="{{ name }}"{% endif %} aria-label="Pretraga">
+                          <button class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit" name="form_type" value="filter1"><i class="bi bi-search fs-5"></i></button>
+                      </div>
+                  </div>
+                </div>
+                <!-- Type -->
+                <div class="col-sm-12 col-lg-3">
+                  <label class="form-label">Odaberi tip</label>
+                  <!-- Select Groups -->
+                  <select class="form-select js-choice choice-select-text-none" name="placeType" data-search-enabled="false">
+                    {% for type in placeTypes%}
+                      <option value="{{ type.name }}" {% if placeType == type.name %}selected{% endif %}>{{ type.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <!-- Sorting -->
+                <div class="col-sm-12 col-lg-3">
+                  <label class="form-label">Sortiranje</label>
+                  <!-- Select Groups -->
+                  <select class="form-select js-choice choice-select-text-none" name="order" data-search-enabled="false">
+                    <option value="alphabetical" {% if order == "alphabetical"%}selected{% endif %}>Azbučno</option>
+                    <option value="rating" {% if order == "rating"%}selected{% endif %}>Predloženo</option>
+                  </select>
+                </div>
+                <!-- Apply -->
+                <div class="col-sm-12 col-lg-3">
+                  <button class="btn btn-primary w-100" type="submit" name="form_type" value="filter2">Primeni filtere</button>
+                </div>
+              </form>
+              <!-- Form END -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Hero event END -->
+
+  <section class="pt-5">
+    <!-- Container START -->
+    <div class="container">
+      <div class="row g-4">
+        <!-- Main content START -->
+        <div class="col-12 vstack gap-4">
+          <!-- Card START -->
+          <div class="card">
+            <!-- Card header START -->
+            <div class="card-header border-0 pb-0">
+              <div class="card-header d-sm-flex align-items-center text-center justify-content-sm-between border-0 pb-0">
+                <h2 class="h4 card-title">Istraži lokacije</h2>
+                <!-- Button modal -->
+{#                <a class="btn btn-primary-soft" href="#" data-bs-toggle="modal" data-bs-target="#modalCreateGroup"> #}
+{#                  <i class="fa-solid fa-plus pe-1"></i> Create group#}
+{#                </a>#}
+              </div>
+            </div>
+            <!-- Card header END -->
+            <!-- Card body START -->
+            <div class="card-body">
+              <!-- Tab nav line -->
+              <div class="tab-content mb-0 pb-0">
+                <!-- Friends groups tab START -->
+                <div class="tab-pane fade show active" id="tab-1">
+                  <div class="row g-4">
+                    {% for location in locations %}
+                    <div class="col-sm-6 col-lg-4">
+                      <!-- Card START -->
+                      <div class="card">
+                          <section class="pt-5 pb-5 position-relative" style="background-image: url({{ location.place_type.picture }}); background-repeat: no-repeat; background-size: cover; background-position: center center; height: 20vh;">
+                                <!-- Rest of the section content -->
+                          </section>
+                        <!-- Card body START -->
+                        <div class="card-body text-center pt-0" style="padding-bottom: 0; ">
+                          <!-- Avatar -->
+                          <div class="avatar avatar-lg mt-n5 mb-3">
+                            <a href="{% url 'location-details' location.place_id %}">
+                              <img class="avatar-img rounded-circle border border-white border-3 bg-white" src="{{ location.picture.url }}" alt="">
+                            </a>
+                          </div>
+                          <!-- Info -->
+                          <h5 class="mb-0">
+                            <a href="{% url 'location-details' location.place_id %}">{{ location.name }}</a>
+                          </h5>
+                          <small>{{ location.place_type }}</small>
+                          <!-- Group stat START -->
+                          <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                            <!-- Group stat item -->
+                            <div>
+                              <h6 class="mb-0" id="avgRate-{{ location.place_id }}">{{ location.average_rating }}</h6>
+                              <small>Prosečna ocena</small>
+                            </div>
+                            <!-- Divider -->
+                            <div class="vr"></div>
+                            <!-- Group stat item -->
+                            <div>
+                              <h6 class="mb-0">{{ location.count_rating }}</h6>
+                              <small>Ukupno ocena</small>
+                            </div>
+                          </div>
+                          <!-- Group stat END -->
+                          <!-- Avatar group START -->
+                          <ul class="avatar-group list-unstyled align-items-center justify-content-center mb-0 mt-3">
+                            <!-- Loop through members or additional info if needed -->
+                          </ul>
+                          <!-- Avatar group END -->
+                        </div>
+                        <!-- Card body END -->
+                        <!-- Card Footer START -->
+                        <div class="card-footer text-center" style="padding: 8px">
+                          <a class="btn btn-success-soft btn-sm" href="{% url 'location-details' location.place_id %}">Vidi više</a>
+                        </div>
+                        <!-- Card Footer END -->
+                      </div>
+                      <!-- Card END -->
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <!-- Friends' groups tab END -->
+              </div>
+            </div>
+            <!-- Card body END -->
+          </div>
+          <!-- Card END -->
+        </div>
+        <!-- Main content END -->
+      </div>
+    </div>
+    <!-- Container END -->
+  </section>
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+{% endblock %}

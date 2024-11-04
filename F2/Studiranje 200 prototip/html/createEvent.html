@@ -1,0 +1,43 @@
+<!-- Autori: Vladimir Bogojevic 0382/21, Mihajlo Antonijevic 0382/21  -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registracija</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/register.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="register-container">
+    <h1>Kreiranje događaja</h1>
+    <div class="form-container">
+      <form class="register-form" action="user.html">
+        <label for="name" class="form-label">Naziv događaja</label>
+        <input type="text" placeholder="Naziv događaja" id="name" required>
+
+        <label for="date" class="form-label">Datum</label>
+        <div class="date-div">
+          <input type="date" placeholder="Datum" id="date" required>
+        </div>
+
+        <label for="desc" class="form-label">Opis</label>
+        <input type="text" placeholder="Opis" id="desc" required>
+
+        <label for="avatar" class="form-label">Naslovna slika (opciono)</label>
+        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" />
+
+        <button type="submit">Napravi događaj</button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

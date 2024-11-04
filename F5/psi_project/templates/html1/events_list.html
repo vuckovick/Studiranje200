@@ -1,0 +1,30 @@
+<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+
+{% block title %}
+    Events list
+{% endblock %}
+
+{% block main %}
+    <h1>Event List</h1>
+        {% if user.is_authenticated %}
+            {{ user.username }}
+        {% else %}
+            NO USER
+            
+        {% endif %}
+        <ul>
+            {% for event in events %}
+                <li>{{ event.name }} - {{ event.date }}</li>
+            {% endfor %}
+        </ul>
+    
+{% endblock %}
+

@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-top:-20px;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 3em;
+}
+
+.login-container {
+  text-align: center;
+  width: 500px;
+}
+
+.form-container {
+  background-color: var(--form-background-color);
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.form-label {
+  width: 100%;
+  margin-left:-20px;
+  display: block;
+  color: var(--text-color);
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+.login-form button {
+  width: 105%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--button-color);
+  color: var(--text-color);
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.register-link {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.register-link:hover {
+  color: var(--link-hover-color);
+}
+
+.picker{
+  margin-bottom: 15px;
+}

@@ -1,0 +1,227 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+{% load static %}
+<!-- **************** MAIN CONTENT START **************** -->
+{% block title %}
+    Organizacije
+{% endblock %}
+
+{% block main %}
+  <main class="pt-0">
+
+    <!-- Hero event START -->
+    <section class="pt-5 pb-0 position-relative" style="background-image: url({% static 'images/bg/07.jpg' %}); background-repeat: no-repeat; background-size: cover; background-position: top center;">
+      <div class="bg-overlay bg-dark opacity-8"></div>
+      <!-- Container START -->
+      <div class="container">
+        <div class="py-5">
+          <div class="row position-relative">
+            <div class="col-lg-9 mx-auto">
+              <div class="text-center">
+                <!-- Title -->
+                <h1 class="text-white">Pronađi organizacije</h1>
+                <p class="text-white">Pronađite idealne studentske organizacije i pridružite im se!</p>
+              </div>
+              <div class="mx-auto bg-mode shadow rounded p-4 mt-5">
+                <!-- Form START -->
+                <form class="row align-items-end g-4" action="{% url 'organizations' %}" method="POST">
+                  {% csrf_token %}
+                  <!-- Search -->
+                  <div class="col-sm-12 col-lg-6">
+                    <div class="d-flex flex-column align-items-start">
+                        <label class="form-label">Pretraga</label>
+                        <div class="position-relative  w-100">
+                            <input class="form-control ps-5 bg-light" type="search" name="name" placeholder="Pretraga..." {% if name != "Pretraga..."%}value="{{ name }}"{% endif %} aria-label="Pretraga">
+                            <button class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit" name="form_type" value="filter1"><i class="bi bi-search fs-5"></i></button>
+                        </div>
+                    </div>
+                  </div>
+                  <!-- Duration -->
+                  <div class="col-sm-12 col-lg-3">
+                    <label class="form-label">Sortiranje</label>
+                    <!-- Select Groups -->
+                    <select class="form-select js-choice choice-select-text-none" name="order" data-search-enabled="false">
+                      <option value="alphabetical" {% if order == "alphabetical"%}selected{% endif %}>Azbučno</option>
+                      <option value="newest" {% if order == "newest"%}selected{% endif %}>Najnovije grupe</option>
+                      <option value="rating" {% if order == "rating"%}selected{% endif %}>Predloženo</option>
+                    </select>
+                  </div>
+                  <!-- Apply -->
+                  <div class="col-sm-12 col-lg-3">
+                    <button class="btn btn-primary w-100" type="submit" name="form_type" value="filter2">Primeni filtere</button>
+                  </div>
+                </form>
+                <!-- Form END -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Hero event END -->
+
+   <section class="pt-5">
+  <!-- Container START -->
+  <div class="container">
+    <div class="row g-4">
+      <!-- Main content START -->
+      <div class="col-12 vstack gap-4">
+        <!-- Card START -->
+        <div class="card">
+          <!-- Card header START -->
+          <div class="card-header border-0 pb-0">
+            <div class="card-header d-sm-flex align-items-center text-center justify-content-sm-between border-0 pb-0">
+              <h2 class="h4 card-title">Istraži organizacije</h2>
+              <!-- Button modal -->
+              {% if can_create == True %}
+              <a class="btn btn-primary-soft" href="#" data-bs-toggle="modal" data-bs-target="#modalCreateGroup">
+                <i class="fa-solid fa-plus pe-1"></i> Kreiraj organizaciju
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          <!-- Card header END -->
+
+          <!-- Card body START -->
+          <div class="card-body">
+            <!-- Tab nav line -->
+            <div class="tab-content mb-0 pb-0">
+              <!-- Friends groups tab START -->
+              <div class="tab-pane fade show active" id="tab-1">
+                <div class="row g-4">
+                  {% for group in groups %}
+                  <div class="col-sm-6 col-lg-4">
+                    <!-- Card START -->
+                    <div class="card">
+                      <div class="h-80px rounded-top" style="background-image: url({% static 'images/bg/01.jpg' %}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                      <!-- Card body START -->
+                      <div class="card-body text-center pt-0">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-lg mt-n5 mb-3">
+                          <a href="{% url 'organization-details' group.org_id %}"><img class="avatar-img rounded-circle border border-white border-3 bg-white" src={{ group.picture.url }} alt=""></a>
+                        </div>
+                        <!-- Info -->
+                        <div class="group-name-container" style="min-height: 50px;"> <!-- Adjust the min-height as needed -->
+                            <h5 class="mb-0"><a href="{% url 'organization-details' group.org_id %}">{{ group.name }}</a></h5>
+                        </div>
+                        <small class="bi bi-book pe-1">
+                          <!--<i class="bi bi-lock pe-1"></i> -->
+                          {{group.studentorg.faculty}}
+                        </small>
+                        <!-- Group stat START -->
+                        <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                          <!-- Group stat item -->
+                          <div>
+                            <h6 class="mb-0">{{ group.members_list.count }}</h6>
+                            <small>Članova</small>
+                          </div>
+                          <!-- Divider -->
+                          <div class="vr"></div>
+                          <!-- Group stat item -->
+                          <div>
+                            <h6 class="mb-0">{{ group.followers }}</h6>
+                            <small>Pratilaca</small>
+                          </div>
+                        </div>
+                        <!-- Group stat END -->
+                        <!-- Avatar group START -->
+                        <ul class="avatar-group list-unstyled align-items-center justify-content-center mb-0 mt-3">
+                          {% for member in group.members_list|slice:":4" %}
+                            <li class="avatar avatar-xs">
+                              <img class="avatar-img rounded-circle" src="{{ member.user.profile_picture.url }}" alt="{{ member.name }}">
+                            </li>
+                          {% endfor %}
+                          {% if group.members_list|length > 4 %}
+                          <li class="avatar avatar-xs me-2">
+                            <div class="avatar-img rounded-circle bg-primary">
+                              <span class="smaller text-white position-absolute top-50 start-50 translate-middle">+{{ group.members_list|length|add:"-4" }}</span>
+                            </div>
+                          </li>
+                          {% endif %}
+                        </ul>
+                        <!-- Avatar group END -->
+                      </div>
+                      <!-- Card body END -->
+                      <!-- Card Footer START -->
+                      <div class="card-footer text-center">
+                        <a class="btn btn-success-soft btn-sm" href="{% url 'organization-details' group.org_id %}"> Saznaj vise </a>
+                      </div>
+                      <!-- Card Footer END -->
+                    </div>
+                    <!-- Card END -->
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <!-- Friends groups tab END -->
+            </div>
+          </div>
+          <!-- Card body END -->
+        </div>
+        <!-- Card END -->
+      </div>
+      <!-- Main content END -->
+    </div>
+    <!-- Row END -->
+  </div>
+  <!-- Container END -->
+</section>
+
+
+  </main>
+  <!-- **************** MAIN CONTENT END **************** -->
+
+  <!-- Modal create group START -->
+  <div class="modal fade" id="modalCreateGroup" tabindex="-1" aria-labelledby="modalLabelCreateGroup" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Title -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabelCreateGroup">Kreraj organizaciju</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Form START -->
+          <form action="{% url 'organizations' %}" method="POST">
+              {% csrf_token %}
+            <!-- Group name -->
+            <div class="mb-3">
+              <label class="form-label">Naziv organizacije</label>
+              <input type="text" name="name" class="form-control" placeholder="Naziv" required>
+            </div>
+            <!-- Group description -->
+            <div class="mb-3">
+              <label class="form-label">Opis organizacije </label>
+              <textarea class="form-control" name="description" rows="3" placeholder="Opis" required></textarea>
+            </div>
+              
+              <!-- Group picture -->
+            <div class="mb-3">
+                <label class="form-label">Logo organizacije</label>
+                <div class="dropzone dropzone-default card shadow-none" data-dropzone='{"maxFiles":1}'>
+                    <div class="dz-message">
+                        <i class="bi bi-file-earmark-text display-3"></i>
+                        <p>Prevuci ili pritisni kako bi dodao sliku.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success-soft">Kreiraj organizaciju</button>
+            </div>
+          </form>
+          <!-- Form END -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal create group END -->
+{% endblock %}

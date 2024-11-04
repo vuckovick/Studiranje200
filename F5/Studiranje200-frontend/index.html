@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Pocetna</title>
+
+  <!-- Meta Tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Kolege200">
+  <meta name="description" content="Bootstrap 5 based Social Media Network and Community Theme">
+
+  <!-- Dark mode -->
+  <script>
+    const storedTheme = localStorage.getItem('theme')
+
+    const getPreferredTheme = () => {
+      if (storedTheme) {
+        return storedTheme
+      }
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light'
+    }
+
+    const setTheme = function(theme) {
+      if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-bs-theme', 'dark')
+      } else {
+        document.documentElement.setAttribute('data-bs-theme', theme)
+      }
+    }
+
+    setTheme(getPreferredTheme())
+
+    window.addEventListener('DOMContentLoaded', () => {
+      var el = document.querySelector('.theme-icon-active');
+      if (el != 'undefined' && el != null) {
+        const showActiveTheme = theme => {
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+          })
+
+          btnToActive.classList.add('active')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          if (storedTheme !== 'light' || storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        showActiveTheme(getPreferredTheme())
+
+        document.querySelectorAll('[data-bs-theme-value]')
+          .forEach(toggle => {
+            toggle.addEventListener('click', () => {
+              const theme = toggle.getAttribute('data-bs-theme-value')
+              localStorage.setItem('theme', theme)
+              setTheme(theme)
+              showActiveTheme(theme)
+            })
+          })
+
+      }
+    })
+  </script>
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+  <!-- Plugins CSS -->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/OverlayScrollbars-master/css/OverlayScrollbars.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/tiny-slider/dist/tiny-slider.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/plyr/plyr.css">
+
+  <!-- Theme CSS -->
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+</head>
+
+<body>
+
+  <!-- **************** MAIN CONTENT START **************** -->
+
+  <!-- =======================
+  Header START -->
+  <header class="navbar-light fixed-top header-static bg-mode">
+
+    <!-- Logo Nav START -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid mx-4">
+        <!-- Logo START -->
+        <a class="navbar-brand" href="index.html">
+          <img class="light-mode-item navbar-brand-item" src="assets/images/logo.svg" alt="logo">
+          <img class="dark-mode-item navbar-brand-item" src="assets/images/logo.png" alt="logo">
+        </a>
+        <!-- Logo END -->
+
+        <button class="icon-md btn btn-light p-0 d-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarVerticaloffcanvas" aria-controls="navbarVerticaloffcanvas">
+          <i class="bi bi-justify-left fs-4"></i>
+        </button>
+
+        <!-- Responsive navbar toggler -->
+        <button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-animation">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+
+        <!-- Main navbar START -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+
+          <!-- Nav Search START -->
+          <!--<div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
+            <div class="nav-item w-100">
+              <form class="rounded position-relative">
+                <input class="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search">
+                <button class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit"><i class="bi bi-search fs-5"> </i></button>
+              </form>
+            </div>
+          </div>-->
+          <!-- Nav Search END -->
+
+          <ul class="navbar-nav navbar-nav-scroll mx-auto">
+            <!-- Nav item 1 Demos -->
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Početna</a>
+            </li>
+            <!-- Nav item 1 Demos -->
+            <li class="nav-item">
+              <a class="nav-link" href="./events.html">Događaji</a>
+            </li>
+            <!-- Nav item 1 Demos -->
+            <li class="nav-item">
+              <a class="nav-link" href="./groups.html">Organizacije</a>
+            </li>
+            <!-- Nav item 1 Demos -->
+            <li class="nav-item">
+              <a class="nav-link" href="./locations.html">Lokacije</a>
+            </li>
+            <!-- Nav item 2 Pages -->
+          </ul>
+        </div>
+        <!-- Main navbar END -->
+
+        <!-- Nav right START -->
+        <ul class="nav flex-nowrap align-items-center ms-lg-3 list-unstyled">
+<!--         <li class="nav-item ms-2">
+            <a class="nav-link icon-md btn p-0" href="settings.html">
+              <i class="bi bi-gear-fill fs-6"> </i>
+            </a>
+          </li>--> 
+          <li class="nav-item dropdown">
+            <a class="nav-link icon-md btn p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              <i class="bi bi-bell-fill fs-6"> </i>
+            </a>
+            <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0" aria-labelledby="notifDropdown">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h6 class="m-0">Notifications <span class="badge bg-danger bg-opacity-10 text-danger ms-2">4 new</span></h6>
+                  <a class="small" href="#">Clear all</a>
+                </div>
+                <div class="card-body p-0">
+                  <ul class="list-group list-group-flush list-unstyled p-2">
+                    <!-- Notif item -->
+                    <li>
+                      <div class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
+                        <div class="avatar text-center d-none d-sm-inline-block">
+                          <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
+                        </div>
+                        <div class="ms-sm-3">
+                          <div class=" d-flex">
+                            <p class="small mb-2"><b>Judy Nguyen</b> sent you a friend request.</p>
+                            <p class="small ms-3 text-nowrap">Just now</p>
+                          </div>
+                          <div class="d-flex">
+                            <button class="btn btn-sm py-1 btn-primary me-2">Accept </button>
+                            <button class="btn btn-sm py-1 btn-danger-soft">Delete </button>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Notif item -->
+                    <li>
+                      <div class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3 position-relative">
+                        <div class="avatar text-center d-none d-sm-inline-block">
+                          <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="">
+                        </div>
+                        <div class="ms-sm-3 d-flex">
+                          <div>
+                            <p class="small mb-2">Wish <b>Amanda Reed</b> a happy birthday (Nov 12)</p>
+                            <button class="btn btn-sm btn-outline-light py-1 me-2">Say happy birthday 🎂</button>
+                          </div>
+                          <p class="small ms-3">2min</p>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Notif item -->
+                    <li>
+                      <a href="#" class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3">
+                        <div class="avatar text-center d-none d-sm-inline-block">
+                          <div class="avatar-img rounded-circle bg-success"><span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">WB</span></div>
+                        </div>
+                        <div class="ms-sm-3">
+                          <div class="d-flex">
+                            <p class="small mb-2">Kolege200 has 15 like and 1 new activity</p>
+                            <p class="small ms-3">1hr</p>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <!-- Notif item -->
+                    <li>
+                      <a href="#" class="list-group-item list-group-item-action rounded d-flex border-0 p-3 mb-1">
+                        <div class="avatar text-center d-none d-sm-inline-block">
+                          <img class="avatar-img rounded-circle" src="assets/images/logo/12.svg" alt="">
+                        </div>
+                        <div class="ms-sm-3 d-flex">
+                          <p class="small mb-2"><b>Bootstrap in the news:</b> The search giant’s parent company, Alphabet, just joined an exclusive club of tech stocks.</p>
+                          <p class="small ms-3">4hr</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-footer text-center">
+                  <a href="./notifications.html" class="btn btn-sm btn-primary-soft">See all notifications</a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <!-- Notification dropdown END -->
+
+          <li class="nav-item ms-3 dropdown">
+            <a class="nav-link p-0" href="./my-profile.html" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+              <div class="d-flex align-items-center position-relative">
+                <!-- Avatar -->
+                <div class="avatar avatar-sm me-xl-3">
+                  <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="avatar">
+                </div>
+                <div class="d-none d-xl-block">
+                  <span class="h6 stretched-link">Lori Ferguson</span>
+                  <p class="small m-0">Web Developer</p>
+                </div>
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3" aria-labelledby="profileDropdown">
+              <!-- Links -->
+              <li><a class="dropdown-item" href="my-profile.html"><i class="bi bi-person-circle fa-fw me-2"></i>My Profile</a></li>
+              <li>
+                <a class="dropdown-item" href="./edit-profile.html" target="_blank">
+                  <i class="fa-fw bi bi-gear me-2"></i>Edit profile
+                </a>
+              </li>
+              <li class="dropdown-divider"></li>
+              <li><a class="dropdown-item bg-danger-soft-hover" href="sign-in.html"><i class="bi bi-power fa-fw me-2"></i>Sign Out</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <!-- Dark mode options START -->
+              <li>
+                <div class="modeswitch-item theme-icon-active d-flex justify-content-center gap-3 align-items-center p-2 pb-0">
+                  <span>Mode:</span>
+                  <button type="button" class="btn btn-modeswitch nav-link text-primary-hover mb-0" data-bs-theme-value="light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Light">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun fa-fw mode-switch" viewBox="0 0 16 16">
+                      <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                      <use href="#"></use>
+                    </svg>
+                  </button>
+                  <button type="button" class="btn btn-modeswitch nav-link text-primary-hover mb-0" data-bs-theme-value="dark" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars fa-fw mode-switch" viewBox="0 0 16 16">
+                      <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                      <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                      <use href="#"></use>
+                    </svg>
+                  </button>
+                  <button type="button" class="btn btn-modeswitch nav-link text-primary-hover mb-0 active" data-bs-theme-value="auto" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half fa-fw mode-switch" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z" />
+                      <use href="#"></use>
+                    </svg>
+                  </button>
+                </div>
+              </li>
+              <!-- Dark mode options END-->
+            </ul>
+          </li>
+          <!-- Profile START -->
+
+        </ul>
+        <!-- Nav right END -->
+      </div>
+    </nav>
+    <!-- Logo Nav END -->
+  </header>
+  <!-- =======================
+  Header END -->
+
+  <main>
+
+    <!-- Container START -->
+    <div class="container-fluid">
+
+      <!-- Sidenav START -->
+      <div class="navbar navbar-vertical navbar-light">
+        <div class="offcanvas offcanvas-start custom-scrollbar rounded pt-3" tabindex="-1" id="navbarVerticaloffcanvas">
+          <div class="offcanvas-body pt-5 pt-lg-0">
+            <!-- Card START -->
+
+            <!-- Avatar -->
+            <div class="avatar avatar-lg mb-3">
+              <a href="./my-profile.html"><img class="avatar-img rounded-circle border border-white border-3" src="assets/images/avatar/07.jpg" alt=""></a>
+            </div>
+            <!-- Info -->
+            <h5 class="mb-0"> <a href="./my-profile.html">Sam Lanson </a> </h5>
+            <small>Web Developer at Kolege200</small>
+            <!-- User stat START -->
+            <div class="hstack gap-2 gap-xl-3 mt-3">
+              <!-- User stat item -->
+              <div>
+                <h6 class="mb-0">256</h6>
+                <small>Post</small>
+              </div>
+              <!-- Divider -->
+              <div class="vr"></div>
+              <!-- User stat item -->
+              <div>
+                <h6 class="mb-0">2.5K</h6>
+                <small>Followers</small>
+              </div>
+              <!-- Divider -->
+              <div class="vr"></div>
+              <!-- User stat item -->
+              <div>
+                <h6 class="mb-0">365</h6>
+                <small>Following</small>
+              </div>
+            </div>
+            <!-- User stat END -->
+
+            <!-- Divider -->
+            <hr>
+
+            <!-- Side Nav START -->
+            <ul class="nav nav-link-secondary flex-column fw-bold gap-2">
+              <li class="nav-item">
+                <a class="nav-link" href="./index.html"> <img class="me-2 h-20px fa-fw" src="assets/images/icon/home-outline-filled.svg" alt=""><span>Feed </span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#!"> <img class="me-2 h-20px fa-fw" src="assets/images/icon/star-outline-filled.svg" alt=""><span>My favorites </span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./notifications.html"> <img class="me-2 h-20px fa-fw" src="assets/images/icon/notification-outlined-filled.svg" alt=""><span>Notifications </span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./edit-profile.html"> <img class="me-2 h-20px fa-fw" src="assets/images/icon/cog-outline-filled.svg" alt=""><span>Settings </span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./sign-in.html"> <img class="me-2 h-20px fa-fw" src="assets/images/icon/arrow-boxed-outline-filled.svg" alt=""><span>Logout </span></a>
+              </li>
+            </ul>
+            <!-- Side Nav END -->
+          </div>
+        </div>
+      </div>
+      <!-- Sidenav END -->
+
+      <!-- Main content START -->
+      <div class="page-content">
+
+        <!-- Discover Events START -->
+        <section class="bg-mode rounded">
+          <div class="row px-5 mb-2">
+            <div class="col-12">
+              <div class="d-sm-flex justify-content-between mb-1">
+                <!-- Title -->
+                <h4>Discover Events </h4>
+                <a class="btn btn-link" href="events.html">View all events</a>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 mb-5 px-5">
+            <div class="col-sm-6 col-lg-3">
+              <!-- Event item START -->
+              <div class="card h-100">
+                <div class="position-relative">
+                  <img class="img-fluid rounded-top" src="assets/images/events/01.jpg" alt="">
+                  <div class="badge bg-danger text-white mt-2 me-2 position-absolute top-0 end-0">
+                    Online
+                  </div>
+                </div>
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                  <!-- Tag -->
+                  <a class="btn btn-xs btn-primary mt-n3" href="event-details-2.html">Spa training </a>
+                  <h5 class="mt-3"> <a href="event-details-2.html"> Bone thugs-n-harmony </a> </h5>
+                  <!-- Date time -->
+                  <p class="mb-0 small"> <i class="bi bi-calendar-check pe-1"></i> Mon, Sep 25, 2020 at 9:30 AM </p>
+                  <p class="small"> <i class="bi bi-geo-alt pe-1"></i> San francisco </p>
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center mb-0">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+78</span></div>
+                    </li>
+                    <li class="ms-3">
+                      <small> are attending</small>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                  <!-- Button -->
+                  <div class="d-flex mt-3 justify-content-between">
+                    <!-- Interested button -->
+                    <div class="w-100">
+                      <input type="checkbox" class="btn-check d-block" id="Interested1">
+                      <label class="btn btn-sm btn-outline-success d-block" for="Interested1"><i class="fa-solid fa-thumbs-up me-1"></i> Interested</label>
+                    </div>
+                    <div class="dropdown ms-3">
+                      <a href="#" class="btn btn-sm btn-primary-soft" id="eventActionShare" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-share-fill"></i>
+                      </a>
+                      <!-- Dropdown menu -->
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventActionShare">
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-1"></i> Send via Direct Message</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-1"></i> Share to News Feed </a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-1"></i> Share to a group</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-1"></i> Share post via …</a></li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-person fa-fw pe-1"></i> Share on a friend's profile</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Event item END -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <!-- Event item START -->
+              <div class="card h-100">
+                <div class="position-relative">
+                  <img class="img-fluid rounded-top" src="assets/images/events/02.jpg" alt="">
+                  <div class="badge bg-danger text-white mt-2 me-2 position-absolute top-0 end-0">
+                    Hotel
+                  </div>
+                </div>
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                  <!-- Tag -->
+                  <a class="btn btn-xs btn-primary mt-n3" href="event-details-2.html">Photography Workshop</a>
+                  <h5 class="mt-3"> <a href="event-details-2.html"> Decibel magazine </a> </h5>
+                  <!-- Date time -->
+                  <p class="mb-0 small"> <i class="bi bi-calendar-check pe-1"></i> Mon, Aug 10, 2022 at 9:30 AM </p>
+                  <p class="small"> <i class="bi bi-geo-alt pe-1"></i> London </p>
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center mb-0">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+34</span></div>
+                    </li>
+                    <li class="ms-3">
+                      <small> are attending</small>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                  <!-- Button -->
+                  <div class="d-flex mt-3 justify-content-between">
+                    <!-- Interested button -->
+                    <div class="w-100">
+                      <input type="checkbox" class="btn-check d-block" id="Interested2" checked>
+                      <label class="btn btn-sm btn-outline-success d-block" for="Interested2"><i class="fa-solid fa-thumbs-up me-1"></i> Interested</label>
+                    </div>
+                    <div class="dropdown ms-3">
+                      <a href="#" class="btn btn-sm btn-primary-soft" id="eventActionShare2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-share-fill"></i>
+                      </a>
+                      <!-- Dropdown menu -->
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventActionShare2">
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-1"></i> Send via Direct Message</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-1"></i> Share to News Feed </a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-1"></i> Share to a group</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-1"></i> Share post via …</a></li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-person fa-fw pe-1"></i> Share on a friend's profile</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Event item END -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <!-- Event item START -->
+              <div class="card h-100">
+                <div class="position-relative">
+                  <img class="img-fluid rounded-top" src="assets/images/events/03.jpg" alt="">
+                  <div class="badge bg-danger text-white mt-2 me-2 position-absolute top-0 end-0">
+                    Online
+                  </div>
+                </div>
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                  <!-- Tag -->
+                  <a class="btn btn-xs btn-primary mt-n3" href="event-details-2.html">Conference</a>
+                  <h5 class="mt-3"> <a href="event-details-2.html"> Illenium: fallen embers tour </a> </h5>
+                  <!-- Date time -->
+                  <p class="mb-0 small"> <i class="bi bi-calendar-check pe-1"></i> Sun, Sep 23, 2022 at 12:00 PM </p>
+                  <p class="small"> <i class="bi bi-geo-alt pe-1"></i> Mumbai </p>
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center mb-0">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/08.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/09.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+65</span></div>
+                    </li>
+                    <li class="ms-3">
+                      <small> are attending</small>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                  <!-- Button -->
+                  <div class="d-flex mt-3 justify-content-between">
+                    <!-- Interested button -->
+                    <div class="w-100">
+                      <input type="checkbox" class="btn-check d-block" id="Interested3">
+                      <label class="btn btn-sm btn-outline-success d-block" for="Interested3"><i class="fa-solid fa-thumbs-up me-1"></i> Interested</label>
+                    </div>
+                    <div class="dropdown ms-3">
+                      <a href="#" class="btn btn-sm btn-primary-soft" id="eventActionShare3" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-share-fill"></i>
+                      </a>
+                      <!-- Dropdown menu -->
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventActionShare3">
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-1"></i> Send via Direct Message</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-1"></i> Share to News Feed </a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-1"></i> Share to a group</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-1"></i> Share post via …</a></li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-person fa-fw pe-1"></i> Share on a friend's profile</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Event item END -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <!-- Event item START -->
+              <div class="card h-100">
+                <div class="position-relative">
+                  <img class="img-fluid rounded-top" src="assets/images/events/04.jpg" alt="">
+                </div>
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                  <!-- Tag -->
+                  <a class="btn btn-xs btn-primary mt-n3" href="event-details-2.html">Live show</a>
+                  <h5 class="mt-3"> <a href="event-details-2.html"> Comedy on the green </a> </h5>
+                  <!-- Date time -->
+                  <p class="mb-0 small"> <i class="bi bi-calendar-check pe-1"></i> Fri, Oct 05, 2022 at 1:00 AM </p>
+                  <p class="small"> <i class="bi bi-geo-alt pe-1"></i> Miami </p>
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center mb-0">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+56</span></div>
+                    </li>
+                    <li class="ms-3">
+                      <small> are attending</small>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                  <!-- Button -->
+                  <div class="d-flex mt-3 justify-content-between">
+                    <!-- Interested button -->
+                    <div class="w-100">
+                      <input type="checkbox" class="btn-check d-block" id="Interested4" checked>
+                      <label class="btn btn-sm btn-outline-success d-block" for="Interested4"><i class="fa-solid fa-thumbs-up me-1"></i> Interested</label>
+                    </div>
+                    <div class="dropdown ms-3">
+                      <a href="#" class="btn btn-sm btn-primary-soft" id="eventActionShare4" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-share-fill"></i>
+                      </a>
+                      <!-- Dropdown menu -->
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventActionShare4">
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-1"></i> Send via Direct Message</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-1"></i> Share to News Feed </a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-people fa-fw pe-1"></i> Share to a group</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-1"></i> Share post via …</a></li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-person fa-fw pe-1"></i> Share on a friend's profile</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Event item END -->
+            </div>
+          </div>
+
+          <!--2nd sec-->
+          <div class="row g-4 justify-content-between px-5 mb-5">
+            <div class="col-lg-5">
+              <!-- Global conference START -->
+              <!-- Image -->
+              <a href="event-details-2.html"><img class="rounded" src="assets/images/events/06.jpg" alt=""></a>
+              <!-- Info -->
+              <h5 class="mt-4"> <a href="event-details-2.html"> Global conference </a></h5>
+              <p>He moonlights difficult engrossed it, sportsmen. Interested has all Devonshire difficulty gay assistance joy.</p>
+              <!-- Avatar group -->
+              <ul class="avatar-group list-unstyled align-items-center mb-0">
+                <li class="avatar avatar-xs">
+                  <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="avatar">
+                </li>
+                <li class="avatar avatar-xs">
+                  <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
+                </li>
+                <li class="avatar avatar-xs">
+                  <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+34</span></div>
+                </li>
+                <li class="ms-3">
+                  <small> are attending</small>
+                </li>
+              </ul>
+              <!-- Global conference END -->
+            </div>
+            <div class="col-lg-6">
+              <!-- Book a conference START -->
+              <h4 class="mb-4">Book a conference</h4>
+              <div class="bg-light dashed p-4 rounded">
+                <div class="row g-4 justify-content-between px-5">
+                  <div class="col-sm-7">
+                    <div class="row g-3">
+                      <!-- Date -->
+                      <div class="col-6">
+                        <small>Date</small>
+                        <h6>12 june, 2022</h6>
+                      </div>
+                      <!-- Time -->
+                      <div class="col-6">
+                        <small>Time</small>
+                        <h6>🌞Morning 10AM</h6>
+                      </div>
+                      <!-- Address -->
+                      <div class="col-12">
+                        <small>Address</small>
+                        <h6>2492 Centennial NW, Acworth, GA, 30102</h6>
+                      </div>
+                      <div class="col-12">
+                        <a class="btn btn-white" href="#"><i class="bi bi-share-fill pe-2"></i> Share </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-5 text-center">
+                    <div class="ticket-border">
+                      <!-- QR code -->
+                      <img class="w-200px mx-auto" src="assets/images/qr-code.png" alt="">
+                      <a class="btn btn-primary mt-3" href="#"><i class="bi bi-ticket-fill pe-2"></i> Book now </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Book a conference END -->
+            </div>
+          </div>
+          <!--2nd sec end-->
+
+
+          <!--Top destination start-->
+          <div class="row px-5 mb-2">
+            <div class="col-12">
+              <div class="d-sm-flex justify-content-between mb-1">
+                <!-- Title -->
+                <h4>Discover Places </h4>
+                <a class="btn btn-link" href="locations.html">View all places</a>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 px-5 mb-5">
+            <div class="col-sm-6 col-lg-3">
+              <!-- Card START -->
+              <div class="card card-overlay-bottom card-img-scale">
+                <!-- Card Image -->
+                <img class="card-img" src="assets/images/albums/02.jpg" alt="">
+                <!-- Card Image overlay -->
+                <div class="card-img-overlay d-flex flex-column p-3 p-sm-4">
+                  <div class="w-100 mt-auto">
+                    <!-- Card title -->
+                    <h5 class="text-white"><a href="#" class="btn-link text-reset stretched-link">California</a></h5>
+                    <!-- Card info -->
+                    <span class="text-white small">Business & Conferences</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Card END -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <!-- Card START -->
+              <div class="card card-overlay-bottom card-img-scale">
+                <!-- Card Image -->
+                <img class="card-img" src="assets/images/albums/04.jpg" alt="">
+                <!-- Card Image overlay -->
+                <div class="card-img-overlay d-flex flex-column p-3 p-sm-4">
+                  <div class="w-100 mt-auto">
+                    <!-- Card title -->
+                    <h5 class="text-white"><a href="#" class="btn-link text-reset stretched-link">Los Angeles</a></h5>
+                    <!-- Card info -->
+                    <span class="text-white small">Events & Parties</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Card END -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <!-- Card START -->
+              <div class="card card-overlay-bottom card-img-scale">
+                <!-- Card Image -->
+                <img class="card-img" src="assets/images/albums/05.jpg" alt="">
+                <!-- Card Image overlay -->
+                <div class="card-img-overlay d-flex flex-column p-3 p-sm-4">
+                  <div class="w-100 mt-auto">
+                    <!-- Card title -->
+                    <h5 class="text-white"><a href="#" class="btn-link text-reset stretched-link">London</a></h5>
+                    <!-- Card info -->
+                    <span class="text-white small">Arts & Entertainment</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Card END -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <!-- Card START -->
+              <div class="card card-overlay-bottom card-img-scale">
+                <!-- Card Image -->
+                <img class="card-img" src="assets/images/albums/01.jpg" alt="">
+                <!-- Card Image overlay -->
+                <div class="card-img-overlay d-flex flex-column p-3 p-sm-4">
+                  <div class="w-100 mt-auto">
+                    <!-- Card title -->
+                    <h5 class="text-white"><a href="#" class="btn-link text-reset stretched-link">London</a></h5>
+                    <!-- Card info -->
+                    <span class="text-white small">Arts & Entertainment</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Card END -->
+            </div>
+          </div>
+          <!--Top destination end-->
+
+          <!--Explore Groups start-->
+          <div class="row px-5 mb-2">
+            <div class="col-12">
+              <div class="d-sm-flex justify-content-between mb-1">
+                <!-- Title -->
+                <h4>Explore Groups </h4>
+                <a class="btn btn-link" href="groups.html">View all groups</a>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 px-5 mb-5">
+            <div class="col-md-4">
+              <!-- Card START -->
+              <div class="card">
+                <div class="h-80px rounded-top" style="background-image:url(assets/images/bg/01.jpg); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                <!-- Card body START -->
+                <div class="card-body text-center pt-0">
+                  <!-- Avatar -->
+                  <div class="avatar avatar-lg mt-n5 mb-3">
+                    <a href="group-details.html"><img class="avatar-img rounded-circle border border-white border-3 bg-mode" src="assets/images/logo/08.svg" alt=""></a>
+                  </div>
+                  <!-- Info -->
+                  <h5 class="mb-0"> <a href="group-details.html">All in the Mind</a> </h5>
+                  <small> <i class="bi bi-lock pe-1"></i> Private Group</small>
+                  <!-- Group stat START -->
+                  <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                    <!-- Group stat item -->
+                    <div>
+                      <h6 class="mb-0">32k</h6>
+                      <small>Members</small>
+                    </div>
+                    <!-- Divider -->
+                    <div class="vr"></div>
+                    <!-- Group stat item -->
+                    <div>
+                      <h6 class="mb-0">20</h6>
+                      <small>Post per day</small>
+                    </div>
+                  </div>
+                  <!-- Group stat END -->
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center justify-content-center mb-0 mt-3">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/02.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/03.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/04.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/05.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+22</span></div>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Card END -->
+            </div>
+            <div class="col-md-4">
+              <!-- Card START -->
+              <div class="card">
+                <div class="h-80px rounded-top" style="background-image:url(assets/images/bg/02.jpg); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                <!-- Card body START -->
+                <div class="card-body text-center pt-0">
+                  <!-- Avatar -->
+                  <div class="avatar avatar-lg mt-n5 mb-3">
+                    <a href="group-details.html"><img class="avatar-img rounded-circle border border-white border-3 bg-mode" src="assets/images/logo/02.svg" alt=""></a>
+                  </div>
+                  <!-- Info -->
+                  <h5 class="mb-0"><a href="group-details.html">Beauty queens</a></h5>
+                  <small> <i class="bi bi-globe pe-1"></i> Public Group</small>
+                  <!-- Group stat START -->
+                  <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                    <!-- Group stat item -->
+                    <div>
+                      <h6 class="mb-0">23k</h6>
+                      <small>Members</small>
+                    </div>
+                    <!-- Divider -->
+                    <div class="vr"></div>
+                    <!-- Group stat item -->
+                    <div>
+                      <h6 class="mb-0">12</h6>
+                      <small>Post per day</small>
+                    </div>
+                  </div>
+                  <!-- Group stat END -->
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center justify-content-center mb-0 mt-3">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/06.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/07.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/09.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+13</span></div>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Card END -->
+            </div>
+            <div class="col-md-4">
+              <!-- Card START -->
+              <div class="card">
+                <div class="h-80px rounded-top" style="background-image:url(assets/images/bg/03.jpg); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                <!-- Card body START -->
+                <div class="card-body text-center pt-0">
+                  <!-- Avatar -->
+                  <div class="avatar avatar-lg mt-n5 mb-3">
+                    <a href="group-details.html"><img class="avatar-img rounded-circle border border-white border-3 bg-mode" src="assets/images/logo/09.svg" alt=""></a>
+                  </div>
+                  <!-- Info -->
+                  <h5 class="mb-0"> <a href="group-details.html">Eternal triangle</a></h5>
+                  <small> <i class="bi bi-globe pe-1"></i> Public Group</small>
+                  <!-- Group stat START -->
+                  <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                    <!-- Group stat item -->
+                    <div>
+                      <h6 class="mb-0">45k</h6>
+                      <small>Members</small>
+                    </div>
+                    <!-- Divider -->
+                    <div class="vr"></div>
+                    <!-- Group stat item -->
+                    <div>
+                      <h6 class="mb-0">16</h6>
+                      <small>Post per day</small>
+                    </div>
+                  </div>
+                  <!-- Group stat END -->
+                  <!-- Avatar group START -->
+                  <ul class="avatar-group list-unstyled align-items-center justify-content-center mb-0 mt-3">
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/11.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <img class="avatar-img rounded-circle" src="assets/images/avatar/10.jpg" alt="avatar">
+                    </li>
+                    <li class="avatar avatar-xs">
+                      <div class="avatar-img rounded-circle bg-primary"><span class="smaller text-white position-absolute top-50 start-50 translate-middle">+12</span></div>
+                    </li>
+                  </ul>
+                  <!-- Avatar group END -->
+                </div>
+                <!-- Card body END -->
+              </div>
+              <!-- Card END -->
+            </div>
+          </div>
+          <!--Explore Groups end-->
+
+        </section>
+        <!-- Discover Events END -->
+        
+      </div>
+      <!-- Main content END -->
+
+    </div>
+    <!-- Container END -->
+
+  </main>
+  <!-- **************** MAIN CONTENT END **************** -->
+
+  <!-- =======================
+JS libraries, plugins and custom scripts -->
+
+  <!-- Bootstrap JS -->
+  <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Vendors -->
+  <script src="assets/vendor/tiny-slider/dist/tiny-slider.js"></script>
+  <script src="assets/vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js"></script>
+  <script src="assets/vendor/plyr/plyr.js"></script>
+  <script src="assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
+
+  <!-- Theme Functions -->
+  <script src="assets/js/functions.js"></script>
+
+</body>
+
+</html>

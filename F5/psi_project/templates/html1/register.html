@@ -1,0 +1,25 @@
+<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base_no_header.html' %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+    
+            {{form.as_p}}
+            <input type="submit" value="Register"/>
+        </form>
+    </div>
+
+{% endblock %}

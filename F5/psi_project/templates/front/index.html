@@ -1,0 +1,312 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{%  extends 'html1/base.html' %}
+{% load static %}
+{% load filters %}
+{% block title %}
+Početna
+{% endblock %}
+
+{% block main %}
+<!-- **************** MAIN CONTENT START **************** -->
+  <main class="">
+    <!-- Container START -->
+    <div class="container-fluid justify-content-center align-items-center">
+      {% if user.is_authenticated %}
+      <!-- Sidenav START -->
+      <div class="navbar navbar-vertical navbar-light">
+        <div class="offcanvas offcanvas-start custom-scrollbar rounded pt-3" tabindex="-1" id="navbarVerticaloffcanvas">
+          <div class="offcanvas-body pt-5 pt-lg-0">
+            <!-- Card START -->
+
+            <!-- Avatar -->
+            <div class="avatar avatar-lg mb-3">
+              <a href="{% url 'my-profile' %}"><img class="avatar-img rounded-circle border border-white border-3" src="{{ user.profile_picture.url }}" alt=""></a>
+            </div>
+            <!-- Info -->
+            <h5 class="mb-1"> <a href="{% url 'my-profile' %}">{{ user.full_name }} </a> </h5>
+            <small>{{ user.faculty.name }}</small>
+            <!-- User stat START -->
+            <div class="hstack gap-2 gap-xl-3 mt-3">
+              <!-- User stat item -->
+              <div>
+                <h6 class="mb-0">{{ user|count_going_events }}</h6>
+                <small>Događaja</small>
+              </div>
+              <!-- Divider -->
+              <div class="vr"></div>
+              <!-- User stat item -->
+              <div>
+                <h6 class="mb-0">{{ user|count_accepted_connections }}</h6>
+                <small>Konekcije</small>
+              </div>
+            </div>
+            <!-- User stat END -->
+
+            <!-- Divider -->
+            <hr>
+
+            <!-- Side Nav START -->
+            <ul class="nav nav-link-secondary flex-column fw-bold gap-2">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}"> <img class="me-2 h-20px fa-fw" src="{% static '/images/icon/home-outline-filled.svg' %}" alt=""><span>Početna </span></a>
+              </li>
+{#              <li class="nav-item">#}
+{#                <a class="nav-link" href="#!"> <img class="me-2 h-20px fa-fw" src="{% static 'images/icon/star-outline-filled.svg' %}" alt=""><span>My favorites </span></a>#}
+{#              </li>#}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'notifications' %}"> <img class="me-2 h-20px fa-fw" src="{% static 'images/icon/notification-outlined-filled.svg' %}" alt=""><span>Obaveštenja </span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'edit-profile' %}"> <img class="me-2 h-20px fa-fw" src="{% static 'images/icon/cog-outline-filled.svg' %}" alt=""><span>Podešavanja </span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"> <img class="me-2 h-20px fa-fw" src="{% static 'images/icon/arrow-boxed-outline-filled.svg' %}" alt=""><span>Odjavi se </span></a>
+              </li>
+            </ul>
+            <!-- Side Nav END -->
+          </div>
+        </div>
+      </div>
+      <!-- Sidenav END -->
+      {% endif %}
+      <!-- Main content START -->
+      <div class="page-content {% if user.is_authenticated %}{% else %}col-lg-10 mx-auto{% endif %}">
+
+        <!-- Discover Events START -->
+        <section class="bg-mode rounded">
+          <div class="row px-5 mb-2">
+            <div class="col-12">
+              <div class="d-sm-flex justify-content-between mb-1">
+                <!-- Title -->
+                <h4>Istraži događaje </h4>
+                <a class="btn btn-link" href="{% url 'events' %}">Vidi sve događaje</a>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 mb-5 px-5">
+            {% for event in events %}
+            <div class="col-sm-6 col-lg-3">
+                <!-- Event item START -->
+                <div class="card h-100">
+                    <div class="position-relative">
+                        <a href="{% url 'event_details' event.event_id %}">
+                        <img class="img-fluid rounded-top" src="/media/{{ event.picture }}" alt="{{ event.name }}" style="height: 20vh; width: 100%; object-fit: cover;">
+                        </a>
+                        <a href="{% url 'location-details' event.place.place_id %}">
+                        <div class="badge bg-danger text-white mt-2 me-2 position-absolute top-0 end-0">
+                            {{ event.place.name }}
+                        </div>
+                        </a>
+                    </div>
+                    <!-- Card body START -->
+                    <div class="card-body position-relative pt-0">
+                        <!-- Tag -->
+                        <a class="btn btn-xs btn-primary mt-n3" style="cursor: default">{{ event.event_type }}</a>
+                        <div class="d-flex flex-column h-100" style="display: flex; flex-direction: column;">
+                            <h5 class="mt-3 mb-auto"><a href="{% url 'event_details' event.event_id %}">{{ event.name }}</a></h5>
+                            <!-- Date time -->
+                            <div class="mt-auto">
+                                <p class="mb-0 small"><i class="bi bi-calendar-check pe-1"></i> {{ event.date }} u {{ event.time }}</p>
+                                <p class="small"><i class="bi bi-geo-alt pe-1"></i> {{ event.place.address }}</p>
+                                <!-- Button -->
+                                <div class="d-flex justify-content-between mb-3">
+                                    <!-- Interested button -->
+                                    {% if user.is_authenticated %}
+                                    <div class="w-100">
+                                        <input type="checkbox" class="btn-check d-block" id="Interested{{ forloop.counter }}" data-event-id="{{ event.event_id }}">
+                                        <label id="{{ event.event_id }}" class="btn btn-sm d-block interested
+                                            {% if event in participations %}btn-success
+                                            {% else %} btn-outline-success
+                                            {% endif %}" for="Interested{{ forloop.counter }}">
+                                            <i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan
+                                        </label>
+                                    </div>
+{#                                    <div class="dropdown ms-3">#}
+{#                                        <a href="#" class="btn btn-sm btn-primary-soft" id="eventActionShare{{ forloop.counter }}" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                                            <i class="bi bi-share-fill"></i>#}
+{#                                        </a>#}
+{#                                        <!-- Dropdown menu -->#}
+{#                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventActionShare{{ forloop.counter }}">#}
+{#                                            <li><a class="dropdown-item" href="#"><i class="bi bi-envelope fa-fw pe-1"></i> Send via Direct Message</a></li>#}
+{#                                            <li><a class="dropdown-item" href="#"><i class="bi bi-bookmark-check fa-fw pe-1"></i> Share to News Feed</a></li>#}
+{#                                            <li><a class="dropdown-item" href="#"><i class="bi bi-people fa-fw pe-1"></i> Share to a group</a></li>#}
+{#                                            <li><a class="dropdown-item" href="#"><i class="bi bi-share fa-fw pe-1"></i> Share post via …</a></li>#}
+{#                                            <li><hr class="dropdown-divider"></li>#}
+{#                                            <li><a class="dropdown-item" href="#"><i class="bi bi-person fa-fw pe-1"></i> Share on a friend's profile</a></li>#}
+{#                                        </ul>#}
+{#                                    </div>#}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Card body END -->
+                </div>
+                <!-- Event item END -->
+            </div>
+            {% endfor %}
+        </div>
+            <!--Top destination start-->
+            <div class="row px-5 mb-2">
+                <div class="col-12">
+                    <div class="d-sm-flex justify-content-between mb-1">
+                        <!-- Title -->
+                        <h4>Istraži lokacije </h4>
+                        <a class="btn btn-link" href="{% url 'locations' %}">Vidi sve lokacije</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 px-5 mb-5">
+                {% for place in places %}
+                <div class="col-sm-6 col-lg-3">
+                    <!-- Card START -->
+                    <div class="card card-overlay-bottom card-img-scale">
+                        <!-- Card Image -->
+                        <img class="card-img" style="height: 25vh; width: 100%;object-fit: cover;" src="/media/{{ place.picture }}" alt="{{ place.name }}">
+                        <!-- Card Image overlay -->
+                        <div class="card-img-overlay d-flex flex-column p-3 p-sm-4">
+                            <div class="w-100 mt-auto">
+                                <!-- Card title -->
+                                <h5 class="text-white"><a href="{% url 'location-details' place.place_id %}" class="btn-link text-reset stretched-link">{{ place.name }}</a></h5>
+                                <!-- Card info -->
+                                <span class="text-white small">{{ place.place_type }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card END -->
+                </div>
+                {% endfor %}
+            </div>
+            <!--Top destination end-->
+
+
+          <!--Explore Groups start-->
+            <div class="row px-5 mb-2">
+                <div class="col-12">
+                    <div class="d-sm-flex justify-content-between mb-1">
+                        <!-- Title -->
+                        <h4>Istraži organizacije </h4>
+                        <a class="btn btn-link" href="{% url 'organizations' %}">Vidi sve organizacije</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 px-5 mb-5">
+                {% for group in groups %}
+                <div class="col-md-4">
+                    <!-- Card START -->
+                    <div class="card">
+                      <div class="h-80px rounded-top" style="background-image: url({% static 'images/bg/01.jpg' %}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                      <!-- Card body START -->
+                      <div class="card-body text-center pt-0">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-lg mt-n5 mb-3">
+                          <a href="{% url 'organization-details' group.org_id %}"><img class="avatar-img rounded-circle border border-white border-3 bg-white" src={{ group.picture.url }} alt=""></a>
+                        </div>
+                        <!-- Info -->
+                        <div class="group-name-container" style="min-height: 50px;">
+                            <h5 class="mb-0"><a href="{% url 'organization-details' group.org_id %}">{{ group.name }}</a></h5>
+                        </div>
+                        <small><i class="bi bi-book pe-1"></i> {{group.studentorg.faculty}}</small>
+                        <!-- Group stat START -->
+                        <div class="hstack gap-2 gap-xl-3 justify-content-center mt-3">
+                          <!-- Group stat item -->
+                          <div>
+                            <h6 class="mb-0">{{ group.members_list.count }}</h6>
+                            <small>Članova</small>
+                          </div>
+                          <!-- Divider -->
+                          <div class="vr"></div>
+                          <!-- Group stat item -->
+                          <div>
+                            <h6 class="mb-0">{{ group.followers }}</h6>
+                            <small>Pratilaca</small>
+                          </div>
+                        </div>
+                        <!-- Group stat END -->
+                        <!-- Avatar group START -->
+                        <ul class="avatar-group list-unstyled align-items-center justify-content-center mb-0 mt-3">
+                          {% for member in group.users_list|slice:":4" %}
+                                <li class="avatar avatar-xs">
+                                    <img class="avatar-img rounded-circle" src="{{ member.user.profile_picture.url }}" alt="avatar">
+                                </li>
+                            {% endfor %}
+                            {% if users_in_event.count > 4 %}
+                            <li class="avatar avatar-xs">
+                                <div class="avatar-img rounded-circle bg-primary"><span class="text-white position-absolute top-50 start-50 translate-middle">+{{ group.members_list|length|add:"-4" }}</span></div>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <!-- Avatar group END -->
+                      </div>
+                      <!-- Card body END -->
+                      <!-- Card Footer START -->
+                      <div class="card-footer text-center">
+                        <a class="btn btn-success-soft btn-sm" href="{% url 'organization-details' group.org_id %}"> Priključi se </a>
+                      </div>
+                      <!-- Card Footer END -->
+                    </div>
+                    <!-- Card END -->
+                </div>
+                {% endfor %}
+            </div>
+            <!--Explore Groups end-->
+
+        </section>
+        <!-- Discover Events END -->
+        
+      </div>
+      <!-- Main content END -->
+
+    </div>
+    <!-- Container END -->
+
+  </main>
+  <!-- **************** MAIN CONTENT END **************** -->
+    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.interested').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const eventId = this.id;
+            console.log(eventId)
+            
+            fetch("{% url 'mark_interested' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'event_id': eventId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Optionally, change the button state
+                    this.classList.remove('btn-outline-success');
+                    this.classList.add('btn-success');
+                    this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan';
+                } else if (data.status === 'already_interested') {
+                    alert('You are already marked as interested in this event.');
+                }else if (data.status === 'canceled') {
+                    // Reset the button to its initial state if the status is 'canceled'
+                    this.classList.add('btn-outline-success');
+                    this.classList.remove('btn-success');
+                    this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
+{% endblock %}
+

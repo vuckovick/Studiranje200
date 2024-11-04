@@ -1,0 +1,416 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+{% load filters %}
+
+{% block title %}
+    Moj profil
+{% endblock %}
+{% load l10n %}
+{% load static %}
+{% block main %}
+  <!-- **************** MAIN CONTENT START **************** -->
+  <main>
+
+    <!-- Container START -->
+    <div class="container">
+      <div class="row g-4">
+
+        <!-- Main content START -->
+        <div class="col-lg-8 vstack gap-4">
+          <!-- Card START -->
+          <div class="card">
+            <!-- Card body START -->
+            <div class="card-body py-0">
+              <div class="d-sm-flex align-items-start text-center text-sm-start">
+                <div>
+                  <!-- Avatar -->
+                  <div class="avatar avatar-xxl mt-n5 mb-3">
+                    <img class="avatar-img rounded-circle border border-white border-3" src="{{user.profile_picture.url}}" alt="">
+                  </div>
+                </div>
+                <div class="ms-sm-4 mt-sm-3">
+                  <!-- Info -->
+                  <h1 class="mb-0 h5">{{ user.full_name }}<i class="{% if user.role == 'admin' %}bi bi-patch-check-fill text-success{% elif user.role == 'organizer' %}bi bi-patch-check-fill text-info{% endif %} small mx-2"></i></h1>
+                  <p>Broj konekcija: {{ connections.count }}</p>
+                </div>
+                <!-- Button -->
+                <div class="d-flex mt-3 justify-content-center ms-sm-auto">
+                    <a href="{% url 'edit-profile' %}">
+                        <button class="btn btn-danger-soft" type="button"> <i class="bi bi-pencil-fill pe-1"></i> Izmeni profil </button>
+                    </a>
+                </div>
+              </div>
+              <!-- List profile -->
+              <ul class="list-inline mb-3 text-center text-sm-start mt-3 mt-sm-0">
+                <li class="list-inline-item"><i class="bi bi-book me-1"></i>{{ user.faculty.name }}</li>
+                <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i>{{ user.city }}</li>
+                <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Korisnik od {% localize on %}{{ user.created_at|date:"d. F Y." }}{% endlocalize %}</li>
+              </ul>
+            </div>
+            <!-- Card body END -->
+          </div>
+          <!-- Card END -->
+
+          <!-- Card feed item START -->
+          <div class="card">
+            <!-- Card header START -->
+            <div class="card-header border-0 pb-0">
+              <h5 class="card-title">Informacije</h5>
+            </div>
+            <!-- Card header END -->
+            <!-- Card body START -->
+            <div class="card-body">
+              <div class="rounded border px-3 py-2 mb-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <h6>Bio</h6>
+                </div>
+                <p>{{ user.bio }} </p>
+              </div>
+              <div class="row g-4">
+                <div class="col-sm-6">
+                  <!-- Designation START -->
+                  <div class="d-flex align-items-center rounded border px-3 py-2">
+                    <!-- Date -->
+                    <p class="mb-0">
+                      <i class="bi bi-book fa-fw me-2"></i> <strong> {{ user.faculty.name }} </strong>
+                    </p>
+                  </div>
+                  <!-- Designation END -->
+                </div>
+                <div class="col-sm-6">
+                  <!-- Lives START -->
+                  <div class="d-flex align-items-center rounded border px-3 py-2">
+                    <!-- Date -->
+                    <p class="mb-0">
+                      <i class="bi bi-geo-alt fa-fw me-2"></i> Mesto: <strong> {{ user.city }} </strong>
+                    </p>
+                  </div>
+                  <!-- Lives END -->
+                </div>
+                <div class="col-sm-6">
+                  <!-- Joined on START -->
+                  <div class="d-flex align-items-center rounded border px-3 py-2">
+                    <!-- Date -->
+                    <p class="mb-0">
+                      <i class="bi bi-geo-alt fa-fw me-2"></i> Korisnik od: <strong> {% localize on %}{{ user.created_at|date:"d. F Y." }}{% endlocalize %} </strong>
+                    </p>
+                  </div>
+                  <!-- Joined on END -->
+                </div>
+                <div class="col-sm-6">
+                  <!-- Instagram -->
+                  <div class="d-flex align-items-center rounded border px-3 py-2">
+                    <p class="mb-0">
+                      <i class="bi bi-envelope fa-fw me-2"></i> Instagram: <strong> 
+                        {% if user.instagram_link %}
+                            <span id="instagram_name"></span>
+                        {% else %}
+                            /
+                        {% endif %}
+
+                    </strong>
+                    </p>
+                  </div>
+                  <!-- Joined on END -->
+                </div>
+              </div>
+            </div>
+            <!-- Card body END -->
+          </div>
+          <!-- Card feed item END -->
+
+          <!-- Events START -->
+          <div class="card">
+            <!-- Card header START -->
+            <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
+              <h5 class="card-title mb-sm-0">Moji događaji</h5>
+              <!-- Button modal -->
+              <a class="btn btn-primary-soft btn-sm" href="{% url 'events' %}"> <i class="fa-solid fa-plus pe-1"></i> Pogledaj naredne događaje</a>
+            </div>
+            <!-- Card header END -->
+          
+            <!-- Card body START -->
+            <div class="card-body">
+              <!-- Upcoming event START -->
+                {% if user.event_participations.all.count > 0 %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Predstojeći događaj:</strong> {{ user.event_participations.all|sledeci_event }}
+                {% if user.event_participations.all|sledeci_event != "Nema događaja" %}
+                  <a href="{% url 'event_details' user.event_participations.all|sledeci_event_id   %}" class="btn btn-xs btn-success ms-md-4">Pogledaj događaj</a>
+                {% endif %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+                {% endif %}
+              <!-- Upcoming event END -->
+              <!-- Events list START -->
+              <div class="row">
+                <!-- Event START -->
+                  {% for event in user.event_participations.all|prethodna_tri_eventa %}
+                    <div class="d-sm-flex align-items-center" style="margin-bottom: 8px">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xl">
+                            <a href="{% url 'event_details' event.event_id %}"><img class="avatar-img rounded border border-white border-3" src="{{ event.picture.url }}" alt=""></a>
+                        </div>
+                        <div class="ms-sm-4 mt-2 mt-sm-0">
+                            <!-- Info -->
+                            <h5 class="mb-1"><a href="{% url 'event_details' event.event_id %}"> {{ event.name }} </a></h5>
+                            <ul class="nav nav-stack small">
+                                <li class="nav-item">
+                                    <i class="bi bi-calendar-check pe-1"></i> {{ event.date }} {{ event.time }}
+                                </li>
+                                <li class="nav-item">
+                                    <i class="bi bi-geo-alt pe-1"></i> {{ event.place }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                  {% endfor %}
+                  <!-- Event END -->
+              </div>
+              <!-- Events list END -->
+            </div>
+            <!-- Card body END -->
+          </div>
+          <!-- Events END -->
+
+        </div>
+        <!-- Main content END -->
+
+        <!-- Right sidebar START -->
+        <div class="col-lg-4">
+
+          <div class="row g-4">
+
+            <!-- Card START -->
+            <div class="col-sm-6 col-lg-12">
+              <div class="card">
+                <div class="card-header border-0 pb-0">
+                  <h5 class="card-title">@{{ user.username }}</h5>
+                  <!-- Button modal -->
+                </div>
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                  <!-- Date time -->
+                  <ul class="list-unstyled mt-3 mb-0">
+                    <li class="mb-2"> <i class="bi bi-calendar-date fa-fw pe-1"></i> Rođen/a: <strong> {{ user.date_birth }} </strong> </li>
+                    <li class="mb-2"> <i class="bi bi-envelope fa-fw pe-1"></i> Email: <strong> {{ user.email }} </strong> </li>
+                    <li> <i class="bi bi-instagram fa-fw pe-1"></i> Instagram: <a href='{{ user.instagram_link }}' style="all: unset;display: inline;cursor: pointer;"><strong>
+                        {% if user.instagram_link %}
+                            @{{ user.instagram_link|extract_segment }}
+                        {% else %}
+                            /
+                        {% endif %}</strong></a> </li>
+                  </ul>
+                </div>
+                <!-- Card body END -->
+              </div>
+            </div>
+            <!-- Card END -->
+
+            <!-- Card START -->
+            <div class="col-sm-6 col-lg-12">
+              <div class="card">
+                <!-- Card header START -->
+                <div class="card-header d-flex justify-content-between border-0">
+                  <h5 class="card-title">Organizacije</h5>
+                </div>
+                <!-- Card header END -->
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                    {% for org in orgs %}
+                      <!-- Experience item START -->
+                      <div class="d-flex">
+                        <!-- Avatar -->
+                        <div class="avatar me-3">
+                          <a href="{% url 'organization-details' org.org.org_id %}"><img class="avatar-img rounded-circle" src="{{ org.org.picture.url }}" alt="organizacija{{ org.org_id }}"> </a>
+                        </div>
+                        <!-- Info -->
+                        <div>
+                          <a href="{% url 'organization-details' org.org.org_id %}">  <h6 class="card-title mb-0">{{ org.org.name}}</h6> </a>
+                          <p class="small">{{ org.org|date_joined:user }}<a class="btn btn-primary-soft btn-xs ms-2" href="{% url 'organization-details' org.org_id %}">Više </a></p>
+                        </div>
+                      </div>
+                      <!-- Experience item END -->
+                    {% endfor %}
+                </div>
+                <!-- Card body END -->
+              </div>
+            </div>
+            <!-- Card END -->
+
+            <!-- Card START -->
+            <div class="col-sm-6 col-lg-12">
+              <div class="card">
+                <!-- Card header START -->
+                <div class="card-header d-sm-flex justify-content-between align-items-center border-0">
+                  <h5 class="card-title">Konekcije <span class="badge bg-danger bg-opacity-10 text-danger">{{ connections.count }}</span></h5>
+                  <a class="btn btn-primary-soft btn-sm" data-bs-toggle="modal" data-bs-target="#modalUsers"> Pogledaj sve konekcije</a>
+                </div>
+                <!-- Card header END -->
+                <!-- Card body START -->
+                <div class="card-body position-relative pt-0">
+                  <div class="row g-3">
+                      {% if connections.count == 0 %}
+                        <div class="text-center justify-content-center mb-5 mt-2">
+                            <i class="display-1 text-body-secondary bi bi-emoji-frown"></i>
+                            <h4 class="mt-2 mb-3 text-body text-center">Nema konekcija!</h4>
+                        </div>
+                      {% else %}
+                      {% for conn in connections|slice:"4" %}
+                        <div class="col-6">
+                            
+                          <!-- Friends item START -->
+                          <div class="card shadow-none text-center h-100">
+                            <!-- Card body -->
+                            <div class="card-body p-2 pb-0 d-flex flex-column justify-content-center align-items-center">
+                              <div class="avatar avatar-xl">
+                                <a href="{% url 'profile_view' username=conn.followee.username %}"><img class="avatar-img rounded-circle" src="{{ conn.followee.profile_picture.url }}" alt=""></a>
+                              </div>
+                              <h6 class="card-title mb-1 mt-3"> <a href="{% url 'profile_view' username=conn.followee.username %}"> {{ conn.followee.full_name}} </a></h6>
+{#                              <p class="mb-0 small lh-sm mutual-conns mt-auto" data-followee-id="{{ conn.followee.id }}">{{ conn.followee|mutual_conns:user }} zajedničkih konekcija</p>#}
+                            </div>
+                            <!-- Card footer -->
+                            <div class="card-footer p-2 border-0">
+                              <button class="btn btn-sm btn-danger followee" data-bs-toggle="tooltip" data-bs-placement="top" title="Obriši konekciju" id="{{ conn.followee.id }}"> <i class="bi bi-person-x"></i> </button>
+                            </div>
+                          </div>
+                          <!-- Friends item END -->
+                        </div>
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+                </div>
+                <!-- Card body END -->
+              </div>
+            </div>
+            <!-- Card END -->
+
+          </div>
+
+        </div>
+        <!-- Right sidebar END -->
+
+      </div> <!-- Row END -->
+    </div>
+    <!-- Container END -->
+  
+  <div class="modal fade" id="modalUsers" tabindex="-1" aria-labelledby="modalLabelUsers" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabelCreateFeed">Sve konekcije</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none;">
+        <div class="d-flex col-lg-12">
+          <ul class="list-unstyled w-100">
+            {% if connections.count == 0 %}
+                <div class="text-center justify-content-center mb-5 mt-2">
+                    <i class="display-1 text-body-secondary bi bi-emoji-frown"></i>
+                    <h4 class="mt-2 mb-3 text-body text-center">Nema konekcija!</h4>
+                </div>
+            {% else %}
+            {% for con in connections %}
+              <li class="w-100" style="width: 100%;">
+                <div class="card py-3 mb-3 w-100" style="width: 100%;">
+                  <div class="card-header border-0 px-3 py-0">
+                    <div class="d-flex align-items-center justify-content-between w-100" style="width: 100%;">
+                      <div class="d-flex align-items-center w-100" style="width: 100%;">
+                        <div class="avatar avatar-story me-2">
+                          <a href="{% url 'profile_view' username=con.followee.username %}"> <img class="avatar-img rounded-circle" src="{{ con.followee.profile_picture.url }}" alt=""> </a>
+                        </div>
+                        <!-- Info and button -->
+                        <div class="d-flex flex-column w-100">
+                          <div class="d-flex justify-content-between align-items-center w-100">
+                            <div>
+                              <h6 class="nav-item card-title mb-0">
+                                <a href="{% url 'profile_view' username=con.followee.username %}"> {{ con.followee.full_name }} </a>
+                              </h6>
+                              <p class="mb-0 small">{{ con.followee.faculty.name }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </li>
+            {% endfor %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </main>
+  <!-- **************** MAIN CONTENT END **************** -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Get the Instagram link from the Django template
+    var instagramLink = "{{ user.instagram_link }}";
+    
+    // Split the link by '/' and get the last part
+    var parts = instagramLink.split('/');
+    
+    document.getElementById('instagram_name').textContent = parts[parts.length - 1];
+
+    var Followees = document.querySelectorAll('.followee').forEach( button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const followeeId = this.id;
+
+        fetch("{% url 'remove_followee' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 'followee_id': followeeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            var bootstrapTooltip = bootstrap.Tooltip.getInstance(this);
+            if (bootstrapTooltip) {
+              bootstrapTooltip.hide();
+            }
+            this.parentElement.parentElement.parentElement.remove();
+
+            fetch("{% url 'update_mutual_connections' %}", {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+              },
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the DOM to reflect the new mutual connections
+                for (let followeeId in data) {
+                    let mutualConnsElement = document.querySelector(`.mutual-conns[data-followee-id="${followeeId}"]`);
+                    if (mutualConnsElement) {
+                        mutualConnsElement.textContent = `${data[followeeId]} zajednickih konekcija`;
+                    }
+                }
+            });
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      });
+    });
+  });
+  
+</script>
+{% endblock %}

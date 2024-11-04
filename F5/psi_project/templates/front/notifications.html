@@ -1,0 +1,442 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+{% load static %}
+{% load filters %}
+<!-- **************** MAIN CONTENT START **************** -->
+{% block title %}
+Obaveštenja
+{% endblock %}
+
+{% block main %}
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+  
+ <!-- Container START -->
+  <div class="container">
+    <div class="row g-4">
+      <!-- Main content START -->
+      <div class="col-lg-8 mx-auto">
+        <!-- Card START -->
+        <div class="card">
+          <div class="card-header py-3 border-0 d-flex align-items-center justify-content-between">
+            <h1 class="h5 mb-0">Obaveštenja</h1>
+            <!-- Notification action START -->
+            <div class="dropdown">
+              <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardNotiAction" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+              </a>
+              <!-- Card share action dropdown menu -->
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardNotiAction">
+                <li>
+                    <a class="dropdown-item" href="#" id="mark-all-read">
+                      <i class="bi bi-check-lg fa-fw pe-2"></i>Označi sve kao pročitano
+                    </a>
+                    <a class="dropdown-item" href="#" id="delete-all-nots">
+                      <i class="bi bi-trash fa-fw pe-2"></i>Obriši sva obveštenja
+                    </a>
+                </li>
+              </ul>
+            </div>
+            <!-- Notification action END -->
+          </div>
+          <div class="card-body p-2">
+            <ul class="list-unstyled">
+                {% if notifications.count == 0 %}
+                    <div class="text-center justify-content-center mb-5 mt-2">
+                        <i class="display-1 text-body-secondary bi bi-emoji-frown"></i>
+                        <h4 class="mt-2 mb-3 text-body text-center">Nema obaveštenja!</h4>
+                    </div>
+                {% else %}
+                {% for notification in notifications %}
+                      <!-- Notif item -->
+                      <li class="mb-3">
+                        <div class="rounded {% if notification.status == 'read' %}badge-read{% else %}badge-unread{% endif %} d-sm-flex border-1 mb-1 p-3 position-relative" style="border: 1px solid grey;">
+                          <!-- Avatar -->
+                        {% if notification.from_type == 'user' %}
+                            {% with sender_user=notification.from_id|get_sender_user %}
+                                {% if sender_user %}
+                                    <div class="avatar text-center">
+                                        <img class="avatar-img rounded-circle" src="{{ sender_user.profile_picture.url }}" alt="{{ sender_user.username }}">
+                                    </div>
+                                    <!-- Info -->
+                                    {% if notification.notification_type.name == 'connection_request' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_user.full_name }}</b> ti je poslao zahtev za konekciju.</p>
+                                        <!-- Button -->
+                                        <div class="d-flex">
+                                            <button class="btn btn-sm py-1 btn-primary me-2 accept_conn" type="button" id="{{ notification.notification_id }}">Prihvati </button>
+                                            <button class="btn btn-sm py-1 btn-danger-soft decline_conn" type="button" id="{{ notification.notification_id }}">Odbij </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'event_invite' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_user.full_name }}</b> te je pozvao na događaj - {{ notification.message }}!</p>
+                                        <div class="d-flex">
+                                            <button class="btn btn-sm py-1 btn-success me-2 dolazim" onclick="accept_event_invite({{ notification.notification_id }})">Dolazim </button>
+                                            <button class="btn btn-sm py-1 btn-danger-soft ne_dolazim" onclick="decline_event_invite({{ notification.notification_id }})">Odbij </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'standard' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_user.full_name }}</b> {{ notification.message }}</p>
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'join_organization' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_user.full_name }}</b> {{ notification.message }}</p>
+                                        <!-- Button -->
+                                        <div class="d-flex">
+                                            <button class="btn btn-sm py-1 btn-primary me-2 accept" id="{{ notification.notification_id }}" type="button">Prihvati </button>
+                                            <button class="btn btn-sm py-1 btn-danger-soft decline" id="{{ notification.notification_id }}" type="button">Odbij </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'become_organizer' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_user.full_name }}</b> {{ notification.message }}</p>
+                                        <!-- Button -->
+                                        <div class="d-flex">
+                                            <button class="btn btn-sm py-1 btn-primary me-2 accept_org" type="button" id="{{ notification.notification_id }}" type="button"> Prihvati </button>
+                                            <button class="btn btn-sm py-1 btn-danger-soft decline_org" type="button" id="{{ notification.notification_id }}" type="button"> Odbij </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                        {% if notification.from_type == 'organization' %}
+                            {% with sender_organization=notification.from_id|get_sender_organization %}
+                                {% if sender_organization %}
+                                    <div class="avatar text-center">
+                                        <img class="avatar-img rounded-circle" src="{{ sender_organization.picture.url }}">
+                                    </div>
+                                    {% if notification.notification_type.name == 'standard' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_organization.name }}</b> {{ notification.message }}</p>
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'event_invite' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_organization.name }}</b> te je pozvao na događaj.</p>
+                                        <div class="d-flex">
+                                            <button class="btn btn-sm py-1 btn-primary me-2">Prihvati </button>
+                                            <button class="btn btn-sm py-1 btn-danger-soft">Odbij </button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'new_event' %}
+                                    <div class="mx-sm-3 my-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_organization.name }}</b></p>
+
+                                        <div class="d-flex">
+                                            <p> organizuje novi događaj - <a href="{% url 'event_details' notification.message|event_id %}">{{ notification.message }}</a> </p>
+                                        </div>
+
+                                    </div>
+                                    {% endif %}
+                                    {% if notification.notification_type.name == 'event_reminder' %}
+                                    <div class="mx-sm-3 mt-2 my-sm-0">
+                                        <p class="small mb-2"><b>{{ sender_organization.name }}</b> te podseća na događaj.</p>
+                                        <div class="d-flex">
+                                            <p>Event name</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                        
+                        <!-- Action -->
+                        <div class="d-flex ms-auto">
+                          <p class="small me-5 text-nowrap" id="notification-created-at">
+                                <label class="relative-time">{{ notification.created_at|date:"c" }}</label>
+                            </p>
+                          <!-- Notification action START -->
+                          <div class="dropdown position-absolute end-0 top-0 mt-3 me-3">
+                            <a href="#" class="z-index-1 text-secondary btn position-relative py-0 px-2" id="cardNotiAction1" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="bi bi-three-dots"></i>
+                            </a>
+                            <!-- Card share action dropdown menu -->
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardNotiAction1">
+                              <li><a class="dropdown-item markOne" id="markOne{{ notification.notification_id }}" href="#"> <i class="bi bi-check-lg fa-fw pe-2"></i>Označi kao pročitano </a></li>
+                              <li><a class="dropdown-item  deleteOne" id="deleteOne{{ notification.notification_id }}" href="#"> <i class="bi bi-trash fa-fw pe-2"></i>Obriši obaveštenje</a></li>
+                            </ul>
+                          </div>
+                          <!-- Notification action END -->
+                          </div>
+                        </div>
+                      </li>
+                {% endfor %}
+            {% endif %}
+            </ul>
+          </div>
+        </div>
+        <!-- Card END -->
+      </div>
+    </div> <!-- Row END -->
+  </div>
+  <!-- Container END -->
+
+</main>
+<script>
+    function decline_request(notID){
+
+        fetch("{% url 'decline_join_request' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 'notification_id': notID })
+        })
+        .then(response => response.json())
+        .then(data => {
+                window.location.reload()}
+            )
+      .catch(error => console.error('Error:', error));
+    }
+
+    function decline_event_invite(notID){
+        fetch("{% url 'decline_event_invite' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 'notification_id': notID })
+        })
+        .then(response => response.json())
+        .then(data => {
+                window.location.reload()}
+            )
+      .catch(error => console.error('Error:', error));
+    }
+    
+    function accept_event_invite(notID){
+        fetch("{% url 'accept_event_invite' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 'notification_id': notID })
+        })
+        .then(response => response.json())
+        .then(data => {
+                window.location.reload()}
+            )
+      .catch(error => console.error('Error:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var acceptButtons = document.querySelectorAll('.accept');
+        acceptButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const not_id = this.id;
+
+                fetch("{% url 'accept_join_request' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": not_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+
+        var declineButtons = document.querySelectorAll('.decline');
+        declineButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const not_id = this.id;
+
+                fetch("{% url 'decline_join_request' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({"notification_id": not_id})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+
+        var acceptOrgButtons = document.querySelectorAll('.accept_org');
+        acceptOrgButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const not_id = this.id;
+
+                fetch("{% url 'accept_org_request' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": not_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+
+        var declineOrgButtons = document.querySelectorAll('.decline_org');
+        declineOrgButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const not_id = this.id;
+
+                fetch("{% url 'decline_join_request' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": not_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+
+        var acceptConnButtons = document.querySelectorAll('.accept_conn');
+        acceptConnButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const not_id = this.id;
+
+                fetch("{% url 'accept_conn_request' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": not_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+
+        var declineConnButtons = document.querySelectorAll('.decline_conn');
+        declineConnButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const not_id = this.id;
+
+                fetch("{% url 'decline_conn_request' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": not_id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+        
+        document.getElementById('mark-all-read').addEventListener('click', function(e) {
+          
+          fetch("{% url 'mark_all_notifications_read' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.reload()}
+            )
+        });
+
+        document.getElementById('delete-all-nots').addEventListener('click', function(e) {
+          
+          fetch("{% url 'delete_all_notifications' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.reload()}
+            )
+        });
+        
+        var markOneButtons = document.querySelectorAll('.markOne');
+        markOneButtons.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                const not_id = this.id;
+                let match = not_id.match(/\d+$/);
+                let number = match ? match[0] : null;
+
+                fetch("{% url 'mark_one_read' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": number })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+        
+        var deleteOneButtons = document.querySelectorAll('.deleteOne');
+        deleteOneButtons.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                const not_id = this.id;
+                let match = not_id.match(/\d+$/);
+                let number = match ? match[0] : null;
+
+                fetch("{% url 'delete_one_notification' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ "notification_id": number })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload()}
+                )
+            });
+        });
+        
+    });
+
+</script>
+
+    <!-- **************** MAIN CONTENT END **************** -->
+{% endblock %}
+

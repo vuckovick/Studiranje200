@@ -1,0 +1,345 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+{% load static %}
+<!-- **************** MAIN CONTENT START **************** -->
+{% block title %}
+    Dogadjaji
+{% endblock %}
+
+{% block main %}
+    <main class="pt-0">
+        <!-- Hero event START -->
+        <section class="sekcija pt-5 pb-0 position-relative" style="background-image: url({% static 'images/bg/07.jpg' %}); background-repeat: no-repeat; background-size: cover; background-position: top center;">
+            <div class="bg-overlay bg-dark opacity-8"></div>
+            <!-- Container START -->
+            <div class="container">
+                <div class="py-5">
+                    <div class="row position-relative">
+                        <div class="col-lg-9 mx-auto">
+                            <div class="text-center">
+                                <!-- Title -->
+                                <h1 class="text-white">Istraži događaje blizu tebe</h1>
+                                <p class="text-white">Otkrijte najuzbudljivije žurke i događaje za Vas!</p>
+                            </div>
+                            <div class="mx-auto bg-mode shadow rounded p-4 mt-5">
+                                <!-- Form START -->
+                                <form class="row align-items-end g-4" action="{% url 'events' %}" method="POST">
+                                    {% csrf_token %}
+                                    <!-- Duration -->
+                                    <div class="col-sm-6 col-lg-3">
+                                        <label class="form-label">Odaberi tip</label>
+                                        <select class="form-select js-choice choice-select-text-none" data-position="bottom" data-search-enabled="false" name="type">
+                                            {% for type in eventTypes%}
+                                                <option value="{{ type.name }}" {% if eventType == type.name %}selected{% endif %}>{{ type.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <!-- Date -->
+                                    <div class="col-sm-6 col-lg-3">
+                                        <label class="form-label">Datum od</label>
+                                        <input type="text" class="form-control flatpickr" name="datefrom" value="{{ datefrom }}">
+                                    </div>
+                                    <!-- Time -->
+                                    <div class="col-sm-6 col-lg-3">
+                                        <label class="form-label">Datum do</label>
+                                        <input type="text" class="form-control flatpickr" name="dateto" value="{{ dateto }}">
+                                    </div>
+                                    <!-- Time -->
+                                    <div class="col-sm-6 col-lg-3">
+                                        <button type="submit" class="btn btn-primary w-100" name='form_type' value="filter">Primeni filtere</button>
+                                    </div>
+                                </form>
+                                
+                                
+                                <!-- Form END -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> 
+        <!-- Hero event END -->
+
+        <section class="pt-5">
+            <!-- Container START -->
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Main content START -->
+                    <div class="col-12 vstack gap-4">
+                        <!-- Card START -->
+                        <div class="card">
+                            <!-- Card header START -->
+                            <div class="card-header border-0 pb-0">
+                                <div class="card-header d-sm-flex align-items-center text-center justify-content-sm-between border-0 pb-0">
+                                    <h2 class="h4 card-title">Istraži događaje</h2>
+                                    <!-- Button modal -->
+                                    {% if user.is_authenticated %}
+                                    <a class="btn btn-primary-soft" href="#" data-bs-toggle="modal" data-bs-target="#modalCreateEvents">
+                                        <i class="fa-solid fa-plus pe-1"></i> Kreiraj događaj
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Card header END -->
+        
+                            <!-- Card body START -->
+                            <div class="card-body">
+                                <!-- Tab nav line -->
+                                <div class="tab-content mb-0 pb-0">
+                                    <!-- Friends groups tab START -->
+                                    <div class="tab-pane fade show active" id="tab-1">
+                                        <div class="row g-4">
+                                            {% for event in events %}
+                                            <div class="col-sm-6 col-xl-4">
+                                                <!-- Event item START -->
+                                                <div class="card h-100">
+                                                    <div class="position-relative">
+                                                        <img class="img-fluid rounded-top" style="height: 20vh; width: 100%;object-fit: cover;" src="/media/{{ event.picture }}" alt="">
+                                                        <a href="{% url 'location-details' event.place.place_id %}">
+                                                        <div class="badge bg-danger text-white mt-2 me-2 position-absolute top-0 end-0">
+                                                            {{ event.place.name }}
+                                                        </div>
+                                                        </a>
+                                                    </div>
+                                                    <!-- Card body START -->
+                                                    <div class="card-body position-relative pt-0">
+                                                        <!-- Tag -->
+                                                        <a class="btn btn-xs btn-primary mt-n3" style="cursor: default">{{ event.event_type }}</a>
+                                                        <div class="d-flex flex-column h-100" style="display: flex; flex-direction: column;">
+                                                            <h5 class="mt-3">
+                                                                <a href="{% url 'event_details' event.event_id %}"> {{ event.name }} </a>
+                                                            </h5>
+                                                            <div class="mt-auto">
+                                                                <!-- Date time -->
+                                                                <p class="mb-0 small">
+                                                                    <i class="bi bi-calendar-check pe-1"></i> {{ event.date }} u {{ event.time }}
+                                                                </p>
+                                                                <p class="small">
+                                                                    <i class="bi bi-geo-alt pe-1"></i> {{ event.place.address }}
+                                                                </p>
+                                                                <!-- Button -->
+                                                                <div class="d-flex justify-content-between mb-3">
+                                                                    {% if user.is_authenticated and event.date >= today%}
+                                                                    <div class="w-100">
+
+                                                                        <input type="checkbox" class="btn-check d-block" id="Interested{{ forloop.counter }}" data-event-id="{{ event.event_id }}">
+                                                                        <label id="{{ event.event_id }}" class="btn btn-sm  d-block interested
+                                                                            {% if event in participations %}btn-success
+                                                                            {% else %} btn-outline-success
+                                                                            {% endif %}"
+                                                                               for="Interested{{ forloop.counter }}"><i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan</label>
+                                                                    </div>
+{#                                                                    <div class="dropdown ms-3">#}
+{#                                                                        <a href="#" class="btn btn-sm btn-primary-soft" id="eventActionShare2" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                                                                            <i class="bi bi-share-fill"></i>#}
+{#                                                                        </a>#}
+{#                                                                        <!-- Dropdown menu -->#}
+{#                                                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventActionShare2">#}
+{#                                                                            <li><a class="dropdown-item" href="#">#}
+{#                                                                                <i class="bi bi-envelope fa-fw pe-1"></i> Send via Direct Message#}
+{#                                                                            </a></li>#}
+{#                                                                            <li><a class="dropdown-item" href="#">#}
+{#                                                                                <i class="bi bi-bookmark-check fa-fw pe-1"></i> Share to News Feed#}
+{#                                                                            </a></li>#}
+{#                                                                            <li><a class="dropdown-item" href="#">#}
+{#                                                                                <i class="bi bi-people fa-fw pe-1"></i> Share to a group#}
+{#                                                                            </a></li>#}
+{#                                                                            <li><a class="dropdown-item" href="#">#}
+{#                                                                                <i class="bi bi-share fa-fw pe-1"></i> Share post via …#}
+{#                                                                            </a></li>#}
+{#                                                                            <li><hr class="dropdown-divider"></li>#}
+{#                                                                            <li><a class="dropdown-item" href="#">#}
+{#                                                                                <i class="bi bi-person fa-fw pe-1"></i> Share on a friend's profile#}
+{#                                                                            </a></li>#}
+{#                                                                        </ul>#}
+{#                                                                    </div>#}
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Card body END -->
+                                                </div>
+                                                <!-- Event item END -->
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <!-- Friends groups tab END -->
+                                </div>
+                                <!-- Tab content END -->
+                            </div>
+                            <!-- Card body END -->
+                        </div>
+                        <!-- Card END -->
+                    </div>
+                    <!-- Main content END -->
+                </div>
+                <!-- Row END -->
+            </div>
+            <!-- Container END -->
+        </section>
+
+    </main>
+    <!-- **************** MAIN CONTENT END **************** -->
+
+    <!-- Modal create events START -->
+    <div class="modal fade" id="modalCreateEvents" tabindex="-1" aria-labelledby="modalLabelCreateEvents" aria-hidden="true">
+        <!-- Modal dialog START -->
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal feed header START -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabelCreateEvents">Kreiraj događaj</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal feed header END -->
+                <!-- Modal feed body START -->
+                <div class="modal-body">
+                    <!-- Form START -->
+                <form id="eventForm" class="row g-4" action="{% url 'events' %}" method="POST">
+                    {% csrf_token %}
+                    <!-- Title -->
+                    <div class="col-12">
+                        <label class="form-label">Naziv</label>
+                        <input type="text" id="title" name="title" class="form-control" placeholder="Naziv" required>
+                    </div>
+                    <!-- Description -->
+                    <div class="col-12">
+                        <label class="form-label">Opis</label>
+                        <textarea id="description" class="form-control" name="description" rows="2" placeholder="Opis" required></textarea>
+                    </div>
+                    <!-- Date -->
+                    <div class="col-sm-4">
+                        <label class="form-label">Datum</label>
+                        <input type="text" id="date" name="date" class="form-control flatpickr" placeholder="Odaberi datum" required>
+                    </div>
+                    <!-- Time -->
+                    <div class="col-sm-4">
+                        <label class="form-label">Vreme</label>
+                        <input type="text" id="time" name="time" class="form-control flatpickr" data-enableTime="true" data-noCalendar="true" placeholder="Odaberi vreme" required>
+                    </div>
+                    <!-- Type -->
+                    <div class="col-sm-4">
+                        <label class="form-label">Tip događaja</label>
+                        <select id="type" class="form-select js-choice choice-select-text-none" name="type" data-position="bottom" data-search-enabled="false" required>
+                            {% for type in eventTypes %}
+                                <option value="{{ type.name }}"> {{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Location -->
+                    <div class="col-12">
+                        <label class="form-label">Lokacija</label>
+                        <select id="place" class="form-select js-choice choice-select-text-none" name="place" data-position="bottom" data-search-enabled="true" required>
+                            {% for place in places %}
+                                <option value="{{ place.place_id }}">{{ place.name }} - {{ place.address }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Dropzone photo START -->
+                    <div class="mb-3">
+                        <label class="form-label">Dodaj sliku događaja</label>
+                        <div class="dropzone dropzone-default card shadow-none" data-dropzone='{"maxFiles":1}'>
+                            <div class="dz-message">
+                                <i class="bi bi-file-earmark-text display-3"></i>
+                                <p>Prevuci ili pritisni kako bi dodao sliku.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Dropzone photo END -->
+                    <!-- Modal feed body END -->
+                    <!-- Modal footer -->
+                    <!-- Error message -->
+                    <div id="error-message" class="error" style="color: red; display: none;"> Niste uneli sve podatke! </div>
+                    <div class="modal-footer" >
+                        <button type="button" class="btn btn-danger-soft me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button id="create-button" type="submit" class="btn btn-success-soft" onclick="validateForm(event)">Create now</button>
+                    </div>
+                </form>
+
+                    <!-- Form END -->
+                </div>
+                
+            </div>
+        </div>
+        <!-- Modal dialog END -->
+    </div>
+    <!-- Modal create events END -->
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('.interested').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const eventId = this.id;
+            console.log(eventId)
+            
+            fetch("{% url 'mark_interested' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'event_id': eventId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Optionally, change the button state
+                    this.classList.remove('btn-outline-success');
+                    this.classList.add('btn-success');
+                    this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan';
+                } else if (data.status === 'already_interested') {
+                    alert('You are already marked as interested in this event.');
+                }else if (data.status === 'canceled') {
+                    // Reset the button to its initial state if the status is 'canceled'
+                    this.classList.add('btn-outline-success');
+                    this.classList.remove('btn-success');
+                    this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+function validateForm(event) {
+    event.preventDefault(); // Prevent form from submitting
+    var isValid = true;
+
+    // Input Elements
+    var title = document.getElementById('title').value.trim();
+    var description = document.getElementById('description').value.trim();
+    var date = document.getElementById('date').value.trim();
+    var time = document.getElementById('time').value.trim();
+    var type = document.getElementById('type').value;
+    var place = document.getElementById('place').value;
+
+    // Check if any field is empty
+    if (!title || !description || !date || !time || !type || !place) {
+        isValid = false;
+    }
+
+    // Display or hide the error message
+    var errorMessage = document.getElementById('error-message');
+    if (isValid) {
+        errorMessage.style.display = 'none';
+        document.getElementById('eventForm').submit(); // Submit form if valid
+    } else {
+        errorMessage.style.display = 'block';
+    }
+}
+
+</script>
+
+{% endblock %}

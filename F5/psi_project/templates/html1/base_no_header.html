@@ -1,0 +1,53 @@
+<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %} Base Title
+        {% endblock %}
+    </title>
+
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/font-awesome/css/all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/OverlayScrollbars-master/css/OverlayScrollbars.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/tiny-slider/dist/tiny-slider.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/plyr/plyr.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/flatpickr/dist/flatpickr.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/choices.js/public/assets/styles/choices.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/dropzone/dist/dropzone.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+
+</head>
+
+<body>
+    {% block main %}
+
+    {% endblock %}
+    
+    <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/tiny-slider/dist/tiny-slider.js' %}"></script>
+    <script src="{% static 'vendor/OverlayScrollbars-master/js/OverlayScrollbars.min.js'%}"></script>
+    <script src="{% static 'vendor/plyr/plyr.js' %}"></script>
+    <script src="{% static 'vendor/dropzone/dist/min/dropzone.min.js' %}"></script>
+    <script src="{% static 'vendor/pswmeter/pswmeter.min.js' %}"></script>
+    <script src="{% static 'vendor/choices.js/public/assets/scripts/choices.min.js' %}"></script>
+    <script src="{% static 'vendor/flatpickr/dist/flatpickr.min.js' %}"></script>
+    
+    <script src="{% static 'js/functions.js' %}"></script>
+</body>
+</html>

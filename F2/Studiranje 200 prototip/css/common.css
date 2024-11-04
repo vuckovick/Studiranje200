@@ -1,0 +1,145 @@
+:root {
+  --background-color: #333;
+  --form-background-color: #222;
+  --button-color: #3c059e;
+  --button-hover-color: #af91e3;
+  --text-color: #eeeeee;
+  --link-color: #af91e3;
+  --link-hover-color: #eeeeee;
+  --light-grey: #777;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  color: var(--text-color);
+  background-color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.17em;
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px 0;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+input, button {
+  font-size: 1rem;
+}
+
+button {
+  font-weight: bold;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--button-color);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--button-hover-color);
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+}
+
+/* HEADER */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--form-background-color);
+  padding: 10px 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Horizontal offset, vertical offset, blur radius, color */
+  -webkit-box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* For Safari and Chrome */
+  -moz-box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* For Firefox */
+  position: relative; /* Ensure the shadow applies correctly */
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.navbar-logo, .navbar-menu, .navbar-profile {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-menu {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.navbar-menu a, .navbar-profile a {
+  text-decoration: none;
+  color: var(--text-color);
+  margin: 0 15px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
+.navbar-menu a:hover{
+  color: var(--link-color);
+}
+
+.navbar-logo a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+.navbar-logo, .navbar-profile {
+  flex-grow: 0; 
+}
+
+.signin-button{
+  background-color: var(--button-color);
+  border-radius: 10px;
+  padding: 10px 25px;
+}
+
+.navbar-logo img{
+  width: 80px;
+  height: auto;
+  border: 0px!important;
+}
+
+.bg-tamno {
+  background-color: var(--light-grey);
+}
+
+.ikonica{
+  font-size: 1.5em;
+  color:var(--text-color);
+}
+
+.ikonica:hover{
+  color:var(--button-hover-color);
+}

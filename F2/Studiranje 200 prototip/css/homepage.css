@@ -1,0 +1,23 @@
+.sidebar div {
+  margin-bottom: 1rem;
+  /* Adjust padding and font styles as needed */
+}
+
+.search-bar {
+  border-radius: 20px;
+}
+
+.card-img-top {
+  /* Style your images as needed, for example: */
+  height: 150px; /* Set a fixed height */
+  object-fit: cover; /* Cover the area without stretching */
+}
+
+/* Custom styles for the rest of the content */
+
+/* You might want to add media queries to handle responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+      display: none; /* Example of hiding sidebar on smaller screens */
+  }
+}

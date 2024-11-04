@@ -1,0 +1,518 @@
+﻿<!--
+Created by: 
+  Vanja Tomic 0289/21
+  Konstantin Vuckovic 0524/21
+  Vladimir Bogojevic 0387/21
+  Mihajlo Antonijevic 0382/21
+-->
+
+{% extends 'html1/base.html' %}
+{% load static %}
+{% load l10n %}
+{% load filters %}
+<!-- **************** MAIN CONTENT START **************** -->
+{% block title %}
+    Dogadjaj
+{% endblock %}
+{% block main %}
+
+  <!-- **************** MAIN CONTENT START **************** -->
+  <main>
+
+    <!-- Overview START -->
+    <section>
+      <div class="container">
+        <div class="row g-4">
+
+          <div class="col-lg-12">
+
+            <!-- Hero event START -->
+            <div class="card card-body card-overlay-bottom border-0 mb-3" style="background-image:url({{ event.picture.url }}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+              <!-- Card body START -->
+              <div class="row g-3 justify-content-between">
+                <!-- Date START -->
+                <div class="col-lg-2">
+                  <div class="bg-mode text-center rounded overflow-hidden p-1 d-inline-block">
+                    <div class="bg-primary p-2 text-white rounded-top small lh-1" style="text-transform: capitalize">{% localize on %}{{ event.date|date:"l" }}{% endlocalize %}</div>
+                    <h5 class="mb-0 py-2 lh-1">{{ event.date|date:"j. F" }}</h5>
+                  </div>
+                </div>
+                {% if user.is_authenticated and event.org in user|get_organization and user.role == 'organizer' %}
+                <div class="col-lg-3 ml-auto text-end">
+                    <button id="invite_followers" name="{{ event.event_id }}" type="button" class="btn btn-danger" onclick="callFollowersToParty()" {% if event.name|cant_invite %} disabled {% endif %}>
+                    <label style="cursor:pointer;">Pozovi pratioce na događaj!</label>
+                    </button>
+                </div>
+                {% endif %}
+
+
+              </div>
+              <!-- Event name START -->
+              <div class="row g-3 justify-content-between align-items-center mt-5 pt-5 position-relative z-index-9">
+                <div class="col-lg-9">
+                  <h1 class="h3 mb-1 text-white">{{ event.name }} </h1>
+                </div>
+                  {% if user.is_authenticated and event.date >= today %}
+                    <div class="col-lg-3">
+
+                        <input type="checkbox" class="btn-check d-block" id="Interested1" data-event-id="{{ event.event_id }}">
+                        <label id="{{ event.event_id }}" class="btn btn-sm  d-block interested z
+                            {% if event in participations %}btn-success
+                            {% else %} btn-outline-success
+                            {% endif %}"><i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan</label>
+                    </div>
+                    {% endif %}
+              </div>
+              <!-- Event name END -->
+            </div>
+            <!-- Hero event END -->
+
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card card-body mb-3">
+              <div class="border-0 mb-3">
+                    <h5 class="card-title">Lokacija</h5>
+                </div>
+              <div>
+                <a href="{% url 'location-details' event.place.place_id %}"><h6 style="display: inline; margin: 0;">{{ event.place.name }} - </h6> <span style="all: unset; display: inline-block; color: var(--bs-gray-800);">{{ event.place.address|truncate_after_second_comma }}</span></a>
+                <iframe class="w-100 d-block rounded grayscale" height="230" src="{{ event.place.google_maps_url }}" style="border:0;" aria-hidden="false" tabindex="0"></iframe>
+              </div>
+            </div>
+
+            <!-- Card body START -->
+            <div class="card card-body mb-3">
+                <div class="border-0 mb-3">
+                    <h5 class="card-title">Slični događaji</h5>
+                    <!-- Button modal -->
+                </div>
+                <!-- Related events item -->
+                {% for event in similar_by_organization %}
+                <div class="d-sm-flex flex-wrap align-items-center mb-3">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-md">
+                        <a href="{% url 'event_details' event.event_id %}"><img class="avatar-img rounded-circle border border-white border-3" src="{{ event.picture.url }}" alt="{{ event.name }}"></a>
+                    </div>
+                    <!-- info -->
+                    <div class="ms-sm-2 my-2 my-sm-0">
+                        <a href="{% url 'event_details' event.event_id %}"><h6 class="mb-0">{{ event.name }}</h6></a>
+                        <p class="small mb-0"> <i class="bi bi-geo-alt pe-1"></i>{{ event.place.address|truncate_after_second_comma }}</p>
+                    </div>
+                    <!-- Button -->
+                    {% if user.is_authenticated and event.date >= today %}
+                    <div class="ms-sm-auto mt-2 mt-sm-0">
+                        <!-- More info button -->
+                        <input type="checkbox" class="btn-check" id="Interested{{ forloop.counter }}" data-event-id="{{ event.event_id }}">
+                        <label id="{{ event.event_id }}" class="btn btn-sm  d-block interested
+                            {% if event in participations %}btn-success
+                            {% else %} btn-outline-success
+                            {% endif %}"
+                               for="Interested{{ forloop.counter }}"><i class="fa-solid fa-thumbs-up me-1"></i></label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% for event in similar_by_place %}
+                <div class="d-sm-flex flex-wrap align-items-center mb-3">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-md">
+                        <a href="{% url 'event_details' event.event_id %}"><img class="avatar-img rounded-circle border border-white border-3" src="{{ event.picture.url }}" alt="{{ event.name }}"></a>
+                    </div>
+                    <!-- info -->
+                    <div class="ms-sm-2 my-2 my-sm-0">
+                        <a href="{% url 'event_details' event.event_id %}"><h6 class="mb-0">{{ event.name }}</h6></a>
+                        <p class="small mb-0"> <i class="bi bi-geo-alt pe-1"></i>{{ event.place.address|truncate_after_second_comma }}</p>
+                    </div>
+                    <!-- Button -->
+                    {% if user.is_authenticated and event.date >= today %}
+                    <div class="ms-sm-auto mt-2 mt-sm-0">
+                        <!-- More info button -->
+                        <input type="checkbox" class="btn-check" id="Interested{{ forloop.counter }}" data-event-id="{{ event.event_id }}">
+                        <label id="{{ event.event_id }}" class="btn btn-sm  d-block interested
+                            {% if event in participations %}btn-success
+                            {% else %} btn-outline-success
+                            {% endif %}"
+                               for="Interested{{ forloop.counter }}"><i class="fa-solid fa-thumbs-up me-1"></i></label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Card body END -->
+
+          </div>
+          <div class="col-lg-8">
+
+            <div class="card card-body mb-3">
+              <!-- Overview -->
+              <h6>Opis dogadjaja</h6>
+              <p>{{ event.description }}</p>
+
+              <!-- Card body START -->
+              <div class="row g-4 my-2">
+                <!-- Category & Type -->
+                <div class="col-sm-6 col-lg-4">
+                  <h5>Tip dogadjaja</h5>
+                  <p class="small mb-0">{{ event.event_type }}</p>
+                </div>
+                <!-- Estimated Turnout -->
+                <div class="col-sm-6 col-lg-4">
+                  <h5>Organizacija</h5>
+                  <a class="mb-0" href="{% url 'organization-details' event.org.org_id %}">{{ event.org }}</a>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <!-- Rating -->
+                    <h5>Ocene</h5>
+                    <ul class="d-flex list-unstyled mb-1">
+                        <li class="me-2" id="avgRate"></li>
+                        <li><i class="fa-solid fa-star text-warning" id="star1"></i></li>
+                        <li><i class="fa-solid fa-star text-warning" id="star2"></i></li>
+                        <li><i class="fa-solid fa-star text-warning" id="star3"></i></li>
+                        <li><i class="fa-solid fa-star text-warning" id="star4"></i></li>
+                        <li><i class="fa-solid fa-star text-warning" id="star5"></i></li>
+                    </ul>
+                    <p class="mb-0 small"> of <strong>{{ event.count_rating }}</strong> Ratings</p>
+                </div>
+                <hr class="my-2">
+
+              <div class="my-2 my-sm-2">
+                <!-- Host START -->
+                <h4>Vaši organizatori </h4>
+                <div class="row g-4 pt-3">
+                    {% for member in event.org|non_followers|slice:":3" %}
+                    <div class="col-sm-4">
+                        <!-- Member Item -->
+                        <div class="d-flex align-items-center">
+                           <a href="{% url 'profile_view' username=member.username %}">
+                            <div class="avatar avatar-lg me-3">
+                                <img class="avatar-img rounded-circle" src="{{ member.profile_picture.url }}" alt="">
+                            </div>
+                            </a>
+                            <div>
+                                <a href="{% url 'profile_view' username=member.username %}"><h6 class="mb-0">{{ member.username }}</h6></a>
+                                <span>{{ event.org.org_id|role_in_org:member.id }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+              </div>
+              <!-- Host END -->
+
+            </div>
+
+            <div class="card card-body mt-3">
+              <div class="row align-items-center">
+                  <div class="col-lg-8">
+                    <h5>Gosti</h5>
+                    <!-- Avatar group START -->
+                    <ul class="avatar-group list-unstyled align-items-center" data-bs-toggle="modal" data-bs-target="#modalUsers" style="cursor:pointer;">
+                        {% for guest in users_in_event|slice:":6" %}
+                            <li class="avatar avatar-xs">
+                                <img class="avatar-img rounded-circle" src="{{ guest.profile_picture.url }}" alt="avatar">
+                            </li>
+                        {% endfor %}
+                        {% if users_in_event.count > 6 %}
+                        <li class="avatar avatar-xs">
+                            <div class="avatar-img rounded-circle bg-primary"><span class="text-white position-absolute top-50 start-50 translate-middle">+</span></div>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Avatar group END -->
+                    <div class="row g-2">
+                        <div class="col-sm-4">
+                            <!-- Registered -->
+                            <div class="d-flex">
+                                <i class="bi bi-hand-thumbs-up fs-4"></i>
+                                <div class="ms-3">
+                                    <h5 class="mb-0">{{ users_in_event.count }}</h5>
+                                    <p class="mb-0">Zainteresovano</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="card card-body">
+              <h4 class="mb-3">Komentari</h4>
+              {% if event.date < today  %}
+              {% if event_user %}
+                {% if event_user.rating == None %}
+                <div class="card card-body mb-3">
+                  <div class="d-flex mb-1">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-xs me-2">
+                      <a href="{% url 'my-profile' %}"> <img class="avatar-img rounded-circle" src="{{user.profile_picture.url}}" alt=""> </a>
+                    </div>
+                    <!-- Post input -->
+                    <form class="w-100">
+                      <input class="form-control pe-4 border-0" placeholder="Podeli svoje mišljenje..." data-bs-toggle="modal" data-bs-target="#modalCreateFeed">
+                    </form>
+                  </div>
+                </div>
+                {% endif %}
+
+              {% for review in event_reviews %}
+                <!-- Card feed item START -->
+                <div class="card mb-3">
+                  <!-- Card header START -->
+                  <div class="card-header border-0 pb-0">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-story me-2">
+                          <a href="{% url 'profile_view' username=review.user.username %}"> <img class="avatar-img rounded-circle" src="{{ review.user.profile_picture.url }}" alt=""> </a>
+                        </div>
+                        <!-- Info -->
+                        <div>
+                          <div class="nav nav-divider">
+                            <h6 class="nav-item card-title mb-0"> <a href="{% url 'profile_view' username=review.user.username %}"> {{ review.user.full_name }} </a></h6>
+                            <span class="nav-item small"> {{ review.created_at }}</span>
+                          </div>
+                          <p class="mb-0 small">{{ review.user.faculty.name }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Card header END -->
+                  <!-- Card body START -->
+                  <div class="card-body">
+                    <p>{{ review.comment }}</p>
+                  </div>
+
+                  <!-- Card body END -->
+                </div>
+                <!-- Card feed item END -->
+              {% endfor %}
+            {% endif %}
+            {% else %}
+              <div class="text-center justify-content-center mb-5 mt-2">
+                    <i class="display-1 text-body-secondary bi bi-emoji-kiss"></i>
+                    <h4 class="mt-2 mb-3 text-body text-center">Prijavi se na događaj i nakon što prođe podeli svoje utiske!</h4>
+                </div>
+          {% endif %}
+          </div>
+
+        </div>
+      </div>
+      </div>
+    </section>
+    <!-- Top Destinations END -->
+
+  <!-- Modal create Feed START -->
+<div class="modal fade" id="modalCreateFeed" tabindex="-1" aria-labelledby="modalLabelCreateFeed" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabelCreateFeed">Napravi recenziju</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex mb-3">
+          <div class="avatar avatar-xs me-2">
+            <img class="avatar-img rounded-circle" src="{{ user.profile_picture.url }}" alt="">
+          </div>
+          <form id="reviewForm" class="w-100" action="{% url 'event_details' event.event_id %}" method="POST" >
+            {% csrf_token %}
+            <textarea name="comment" class="form-control pe-4 fs-3 lh-1 border-1" rows="4" placeholder="Podeli svoje mišljenje..." autofocus required></textarea>
+            {% if event_user.rating == None%}
+            <div class="mt-3 row">
+                <div class="col-md-8">
+                    <h6>Ocena</h6>
+                    <div class="stars">
+                      <input class="star star-5" id="star-5" type="radio" name="rating" value="5" required/>
+                      <label class="star star-5" for="star-5"></label>
+                      <input class="star star-4" id="star-4" type="radio" name="rating" value="4" required/>
+                      <label class="star star-4" for="star-4"></label>
+                      <input class="star star-3" id="star-3" type="radio" name="rating" value="3" required/>
+                      <label class="star star-3" for="star-3"></label>
+                      <input class="star star-2" id="star-2" type="radio" name="rating" value="2" required/>
+                      <label class="star star-2" for="star-2"></label>
+                      <input class="star star-1" id="star-1" type="radio" name="rating" value="1" required/>
+                      <label class="star star-1" for="star-1"></label>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-md-4 text-sm-end mt-2">
+                  <button type="submit" class="btn btn-success-soft me-2" form="reviewForm">Podeli</button>
+                </div>
+            </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal create feed END -->
+
+
+<div class="modal fade" id="modalUsers" tabindex="-1" aria-labelledby="modalLabelUsers" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabelCreateFeed">Gosti</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none;">
+        <div class="d-flex col-lg-12">
+          <ul class="list-unstyled w-100">
+            {% for user in users_in_event %}
+              <li class="w-100" style="width: 100%;">
+                <div class="card py-3 mb-3 w-100" style="width: 100%;">
+                  <div class="card-header border-0 px-3 py-0">
+                    <div class="d-flex align-items-center justify-content-between w-100" style="width: 100%;">
+                      <div class="d-flex align-items-center w-100" style="width: 100%;">
+                        <div class="avatar avatar-story me-2">
+                          <a href="{% url 'profile_view' username=user.username %}"> <img class="avatar-img rounded-circle" src="{{ user.profile_picture.url }}" alt=""> </a>
+                        </div>
+                        <!-- Info and button -->
+                        <div class="d-flex flex-column w-100">
+                          <div class="d-flex justify-content-between align-items-center w-100">
+                            <div>
+                              <h6 class="nav-item card-title mb-0">
+                                <a href="{% url 'profile_view' username=user.username %}"> {{ user.full_name }} </a>
+                              </h6>
+                              <p class="mb-0 small">{{ user.faculty.name }}</p>
+                            </div>
+                            {% comment %} <a href="#">
+                              <button class="btn btn-success-soft" type="button">
+                                <i class="bi bi-plus pe-1"></i>Konektuj se
+                              </button>
+                            </a> {% endcomment %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal create feed END -->
+
+  </main>
+
+    <script>
+        const style = document.createElement('style');
+        style.innerHTML = `
+        #modalUsers .modal-body::-webkit-scrollbar {
+          display: none; /* Hide the scrollbar for Webkit browsers */
+        }
+        `;
+        // Append the style element to the head of the document
+        document.head.appendChild(style);
+
+        // Calculate the average rating
+        var averageRating = {{ event.total_rating }} / {{ event.count_rating }};
+        if({{ event.count_rating }} == 0){
+            averageRating = 0;
+        }
+        // Update the HTML content dynamically
+        document.getElementById('avgRate').textContent = averageRating.toFixed(1); // Ensure 2 decimal places
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.interested').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const eventId = this.id;
+                    console.log(eventId)
+
+                    fetch("{% url 'mark_interested' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ 'event_id': eventId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Optionally, change the button state
+                            this.classList.remove('btn-outline-success');
+                            this.classList.add('btn-success');
+                            if(this.classList.contains('z')){
+                                this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan';
+                            }
+                            else{
+                                this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i>';
+                            }
+                        } else if (data.status === 'already_interested') {
+                            alert('You are already marked as interested in this event.');
+                        }else if (data.status === 'canceled') {
+                            // Reset the button to its initial state if the status is 'canceled'
+                            this.classList.add('btn-outline-success');
+                            this.classList.remove('btn-success');
+                            if(this.classList.contains('z')){
+                                this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i> Zainteresovan';
+                            }
+                            else{
+                                this.innerHTML = '<i class="fa-solid fa-thumbs-up me-1"></i>';
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+
+            let avgRate = parseFloat(document.getElementById('avgRate').textContent);
+
+            // Function to update stars based on the rate
+            function updateStars(rate) {
+                for (let i = 1; i <= 5; i++) {
+                    let star = document.getElementById('star' + i);
+                    if (rate >= i) {
+                        star.className = 'fa-solid fa-star text-warning';
+                    } else if (rate >= i - 0.5) {
+                        star.className = 'fa-solid fa-star-half-stroke text-warning';
+                    } else {
+                        star.className = 'fa-regular fa-star';
+                    }
+                }
+            }
+
+            updateStars(avgRate);
+
+        });
+
+        function callFollowersToParty(){
+            var event_id = document.getElementById("invite_followers").name;
+            
+            fetch("{% url 'invite_followers_to_party' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'event_id': event_id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.reload()
+            })
+        }
+
+
+
+        </script>
+  <!-- **************** MAIN CONTENT END **************** -->
+{% endblock %}
